@@ -1,4 +1,5 @@
 import 'package:book_library/resource/string.dart';
+import 'package:book_library/widgets/custom_icon_view.dart';
 import 'package:flutter/material.dart';
 
 
@@ -39,8 +40,8 @@ class PlayBookItemView extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: const [
-                        PlayIconView(image: "assets/earphone.png"),
-                        PlayIconView(image: "assets/done.png")
+                        CustomIconView(image: "assets/earphone.png"),
+                        CustomIconView(image: "assets/done.png")
                       ],
                     ),
                     const SizedBox(height: 10,),
@@ -59,19 +60,4 @@ class PlayBookItemView extends StatelessWidget {
   }
 }
 
-class PlayIconView extends StatelessWidget {
-  const PlayIconView({Key? key, required this.image}) : super(key: key);
-  final String image;
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(6),
-      decoration: BoxDecoration(
-        color: Colors.black87,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Image.asset(image),
-    );
-  }
-}

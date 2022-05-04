@@ -5,12 +5,14 @@ class NormalText extends StatelessWidget {
   final String text;
   final Color color;
   final double textSize;
+  final FontWeight fontWeight;
 
   const NormalText({
     Key? key,
     required this.text,
     this.color = Colors.blueGrey,
     this.textSize = normalTextSize,
+    this.fontWeight = FontWeight.normal
   }) : super(key: key);
 
   @override
@@ -20,6 +22,7 @@ class NormalText extends StatelessWidget {
       overflow: TextOverflow.ellipsis,
       style: TextStyle(color: color,
         fontSize: textSize,
+        fontWeight: fontWeight
       ),
     );
   }
