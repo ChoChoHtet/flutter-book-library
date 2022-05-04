@@ -13,7 +13,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final List<Widget> _pages = const [HomePage(), LibraryPage()];
+  final List<Widget> _pages =  [HomePage(),const LibraryPage()];
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
