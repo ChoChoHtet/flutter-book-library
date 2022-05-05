@@ -82,12 +82,15 @@ class HomePage extends StatelessWidget {
                         const SizedBox(
                           width: paddingNormal,
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            NormalText(text: "The making of a manager"),
-                            NormalText(text: "Writer"),
-                          ],
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: const [
+                              NormalText(text: "The making of a manager"),
+                              NormalText(text: "Writer"),
+                            ],
+                          ),
                         ),
                       ],
                     ),
