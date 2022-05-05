@@ -10,7 +10,7 @@ class ItemShelveView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 90,
-      margin: const EdgeInsets.only(top: 10,left: 16,right: 16),
+      margin: const EdgeInsets.only(top: 10, left: 16, right: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -27,7 +27,14 @@ class ItemShelveView extends StatelessWidget {
                       topLeft: Radius.circular(8),
                       topRight: Radius.circular(8),
                     ),
-                    child: SizedBox(width: 80, height: 90, child: Image.network(imgUrl,fit: BoxFit.cover,)),
+                    child: SizedBox(
+                      width: 80,
+                      height: 90,
+                      child: Image.network(
+                        imgUrl,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
                 ),
                 ClipRRect(
@@ -35,7 +42,13 @@ class ItemShelveView extends StatelessWidget {
                     topLeft: Radius.circular(10),
                     topRight: Radius.circular(10),
                   ),
-                  child: SizedBox(width: 80, height: 90, child: Image.network(imgUrl2,fit: BoxFit.cover,)),
+                  child: SizedBox(
+                      width: 80,
+                      height: 90,
+                      child: Image.network(
+                        imgUrl2,
+                        fit: BoxFit.cover,
+                      )),
                 )
               ],
             ),
@@ -52,7 +65,8 @@ class ItemShelveView extends StatelessWidget {
                     padding: EdgeInsets.only(top: 10),
                     child: Text(
                       "10 International Design Books to Read",
-                      style: TextStyle(color: Colors.black87,
+                      style: TextStyle(
+                        color: Colors.black87,
                         fontSize: 18,
                       ),
                     ),
@@ -61,7 +75,8 @@ class ItemShelveView extends StatelessWidget {
                     padding: EdgeInsets.symmetric(vertical: 10),
                     child: Text(
                       "3 books",
-                      style: TextStyle(color: Colors.black87,
+                      style: TextStyle(
+                        color: Colors.black87,
                         fontSize: 14,
                       ),
                     ),

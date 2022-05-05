@@ -6,6 +6,12 @@ const homeSearchPlayBook = "Search Play Books";
 const ebookTitle = "Ebooks for you";
 const onYourWishlist = "On your wishlist";
 const revision = "More like don't make me think , Revision example text title";
+const menuRemoveDownload = "Remove Download";
+const menuDeleteLibrary = "Delete from Library";
+const menuAddToShelf = "Add to Shelf";
+const menuAddThisBook ="Add this book";
+
+
 
 //Library Pge
 const libraryTab1= "Your books";

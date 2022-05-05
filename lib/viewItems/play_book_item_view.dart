@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 
 
 class PlayBookItemView extends StatelessWidget {
-  const PlayBookItemView({Key? key}) : super(key: key);
+  const PlayBookItemView({Key? key,required this.onTapMenu}) : super(key: key);
+  final VoidCallback onTapMenu;
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class PlayBookItemView extends StatelessWidget {
       ),
       child: Container(
           width: 350,
-          height: 300,
+         // height: MediaQuery.of(context).size.height * 0.3,
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           decoration: BoxDecoration(
             image: const DecorationImage(
@@ -25,12 +26,15 @@ class PlayBookItemView extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Align(
+               Align(
                 alignment: Alignment.topRight,
-                child: Icon(
-                  Icons.more_horiz_rounded,
-                  color: Colors.white,
-                  size: 30,
+                child: InkWell(
+                  onTap: onTapMenu,
+                  child:const Icon(
+                    Icons.more_horiz_rounded,
+                    color: Colors.white,
+                    size: 30,
+                  ),
                 ),
               ),
               Align(

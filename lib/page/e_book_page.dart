@@ -3,7 +3,6 @@ import 'package:book_library/resource/string.dart';
 import 'package:book_library/widgets/horizontal_book_view.dart';
 import 'package:flutter/cupertino.dart';
 
-import '../viewItems/item_book_view.dart';
 
 class EBookPage extends StatelessWidget {
   const EBookPage({Key? key}) : super(key: key);
@@ -36,7 +35,6 @@ class EBookPage extends StatelessWidget {
             description: "",
             author: "author",
           ),
-          SizedBox(height: 30,),
         ],
       ),
     );

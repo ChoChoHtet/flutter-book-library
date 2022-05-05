@@ -5,6 +5,7 @@ import 'package:book_library/resource/string.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import '../viewItems/play_book_item_view.dart';
+import '../widgets/normal_text.dart';
 import '../widgets/search_bar_view.dart';
 
 class HomePage extends StatelessWidget {
@@ -24,11 +25,15 @@ class HomePage extends StatelessWidget {
       ),
       body: ListView(
         children: [
-         const SizedBox(height: 30,),
+          const SizedBox(
+            height: 30,
+          ),
           CarouselSlider.builder(
             itemCount: booksList.length,
             itemBuilder: (context, itemIndex, pageViewIndex) =>
-                const PlayBookItemView(),
+                PlayBookItemView(
+              onTapMenu: () => _showMenuList(context),
+            ),
             options: CarouselOptions(
                 autoPlayCurve: Curves.fastOutSlowIn,
                 enlargeCenterPage: true,
@@ -39,10 +44,98 @@ class HomePage extends StatelessWidget {
           const SizedBox(
             height: 30,
           ),
-          BookTabSection(tabList: tabList)
+          BookTabSection(tabList: tabList),
         ],
       ),
     );
+  }
+
+  void _onTapMenuItem(String action){
+    //ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("onTap Menu")),);
+    debugPrint("on Tap Menu: $action");
+  }
+
+  void _showMenuList(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) => SizedBox(
+              height: MediaQuery.of(context).size.height * 0.6,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 10),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: SizedBox(
+                            width: 70,
+                            height: 100,
+                            child: Image.network(
+                              imgUrl3,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: paddingNormal,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [
+                            NormalText(text: "The making of a manager"),
+                            NormalText(text: "Writer"),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(),
+                  Wrap(
+                    children:  [
+                      ListTile(
+                        leading: const Icon(Icons.remove_circle_outline),
+                        title: const NormalText(
+                          text: menuRemoveDownload,
+                        ),
+                        onTap:() => _onTapMenuItem(menuRemoveDownload),
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.delete),
+                        title: const NormalText(
+                          text: menuDeleteLibrary,
+                        ),
+                        onTap:() => _onTapMenuItem(menuDeleteLibrary),
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.add),
+                        title: const NormalText(
+                          text: menuAddToShelf,
+                        ),
+                        onTap:() => _onTapMenuItem(menuAddToShelf),
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.book),
+                        title: const NormalText(
+                          text: menuAddThisBook,
+                        ),
+                        onTap:() => _onTapMenuItem(menuAddThisBook),
+                      )
+                    ],
+                  ),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16),
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text("Buy SGD 10"),
+                    ),
+                  )
+                ],
+              ),
+            ));
   }
 }
 
@@ -82,7 +175,10 @@ class _BookTabSectionState extends State<BookTabSection>
                 style: TextStyle(fontSize: mediumTextSize),
               ),
             ]),
-        const Divider(height: 1,thickness: 1,),
+        const Divider(
+          height: 1,
+          thickness: 1,
+        ),
         SizedBox(
           height: MediaQuery.of(context).size.height,
           child: TabBarView(
