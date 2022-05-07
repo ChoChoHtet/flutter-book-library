@@ -1,5 +1,6 @@
 import 'package:book_library/resource/dimen.dart';
 import 'package:book_library/viewItems/item_book_library_view.dart';
+import 'package:book_library/viewItems/item_list_view.dart';
 import 'package:book_library/widgets/custom_chip_view.dart';
 import 'package:book_library/widgets/normal_text.dart';
 import 'package:book_library/widgets/title_text.dart';
@@ -176,21 +177,19 @@ class _YourBookPageState extends State<YourBookPage> {
               ),
               Row(
                 children: [
-                   InkWell(
-                     onTap: (){
-                       var sortByController = _showMenuSort(context);
-                       sortByController.then((value){
-                         setState(() {
-
-                         });
-                       });
-                     },
+                  InkWell(
+                    onTap: () {
+                      var sortByController = _showMenuSort(context);
+                      sortByController.then((value) {
+                        setState(() {});
+                      });
+                    },
                     child: const Icon(
                       Icons.sort,
                       size: normalIconSize,
                     ),
                   ),
-                   Padding(
+                  Padding(
                     padding: const EdgeInsets.only(left: 8),
                     child: NormalText(
                       text: "Sort by: ${getSortTitle(selectedSortBy)}",
@@ -216,31 +215,31 @@ class _YourBookPageState extends State<YourBookPage> {
               const SizedBox(
                 height: 29,
               ),
-              GridView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  itemCount: 12,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: _result == 2 ? 2 : 3,
-                    childAspectRatio: _result == 2 ?0.8 : 0.5,
-                  ),
-                  itemBuilder: (context, index) => const ItemBookLibraryView())
+              ListMenuSection(result: _result)
             ],
           ),
         ),
       ),
     );
   }
+
   String getSortTitle(int result) {
     var text = "";
-    switch(result){
-      case 1: text = "Recent" ;break ;
-      case 2: text = "Title" ; break;
-      case 3: text = "Author" ;break;
-      default : text = "Recent" ; break;
+    switch (result) {
+      case 1:
+        text = "Recent";
+        break;
+      case 2:
+        text = "Title";
+        break;
+      case 3:
+        text = "Author";
+        break;
+      default:
+        text = "Recent";
+        break;
     }
-    return text ;
+    return text;
   }
 
   _showMenuList(BuildContext context) => showModalBottomSheet(
@@ -274,6 +273,7 @@ class _YourBookPageState extends State<YourBookPage> {
                         onChanged: (int? result) {
                           setState(() {
                             _result = result!;
+                            Navigator.pop(context, _result);
                           });
                         },
                       ),
@@ -313,74 +313,105 @@ class _YourBookPageState extends State<YourBookPage> {
         }),
       );
   _showMenuSort(BuildContext context) => showModalBottomSheet(
-    context: context,
-    builder: (context) => StatefulBuilder(builder: (context, setState) {
-      return SizedBox(
-        height: MediaQuery.of(context).size.height * 0.36,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-                padding: EdgeInsets.only(
-                    top: 16, bottom: 16, left: 16, right: 16),
-                child: Text(
-                  "Sort by",
-                  style: TextStyle(
-                      color: Colors.black87,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500),
-                )),
-            const Divider(
-              thickness: 1,
-            ),
-            Wrap(
+        context: context,
+        builder: (context) => StatefulBuilder(builder: (context, setState) {
+          return SizedBox(
+            height: MediaQuery.of(context).size.height * 0.36,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ListTile(
-                  title: const Text("Recently opened"),
-                  leading: Radio(
-                    value: 1,
-                    groupValue: selectedSortBy,
-                    onChanged: (int? result) {
-                      setState(() {
-                        selectedSortBy = result!;
-                        Navigator.pop(context, selectedSortBy);
-                      });
-
-                    },
-                  ),
+                const Padding(
+                    padding: EdgeInsets.only(
+                        top: 16, bottom: 16, left: 16, right: 16),
+                    child: Text(
+                      "Sort by",
+                      style: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500),
+                    )),
+                const Divider(
+                  thickness: 1,
                 ),
-                ListTile(
-                  title: const Text("Title"),
-                  leading: Radio(
-                    value: 2,
-                    groupValue: selectedSortBy,
-                    onChanged: (int? result) {
-                      setState(() {
-                        debugPrint("radio click: $result");
-                        selectedSortBy = result!;
-                        Navigator.pop(context, selectedSortBy);
-                      });
-                    },
-                  ),
-                ),
-                ListTile(
-                  title: const Text("Author"),
-                  leading: Radio(
-                    value: 3,
-                    groupValue:selectedSortBy,
-                    onChanged: (int? result) {
-                      setState(() {
-                        selectedSortBy = result!;
-                        Navigator.pop(context,selectedSortBy);
-                      });
-                    },
-                  ),
+                Wrap(
+                  children: [
+                    ListTile(
+                      title: const Text("Recently opened"),
+                      leading: Radio(
+                        value: 1,
+                        groupValue: selectedSortBy,
+                        onChanged: (int? result) {
+                          setState(() {
+                            selectedSortBy = result!;
+                            Navigator.pop(context, selectedSortBy);
+                          });
+                        },
+                      ),
+                    ),
+                    ListTile(
+                      title: const Text("Title"),
+                      leading: Radio(
+                        value: 2,
+                        groupValue: selectedSortBy,
+                        onChanged: (int? result) {
+                          setState(() {
+                            debugPrint("radio click: $result");
+                            selectedSortBy = result!;
+                            Navigator.pop(context, selectedSortBy);
+                          });
+                        },
+                      ),
+                    ),
+                    ListTile(
+                      title: const Text("Author"),
+                      leading: Radio(
+                        value: 3,
+                        groupValue: selectedSortBy,
+                        onChanged: (int? result) {
+                          setState(() {
+                            selectedSortBy = result!;
+                            Navigator.pop(context, selectedSortBy);
+                          });
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
+          );
+        }),
       );
-    }),
-  );
+}
+
+class ListMenuSection extends StatelessWidget {
+  const ListMenuSection({
+    Key? key,
+    required int result,
+  })  : _result = result,
+        super(key: key);
+
+  final int _result;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        child: _result == 1
+            ? ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                separatorBuilder: (context,index) => const SizedBox(height: 30,),
+                itemCount: 12,
+                itemBuilder: (context, index) => const ItemListView())
+            : GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                itemCount: 12,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: _result == 2 ? 2 : 3,
+                  childAspectRatio: _result == 2 ? 0.8 : 0.5,
+                ),
+                itemBuilder: (context, index) => const ItemBookLibraryView()));
+  }
 }
