@@ -19,8 +19,8 @@ class _YourBookPageState extends State<YourBookPage> {
   bool chipDownload = false;
   bool chipPurchase = false;
   bool chipClose = false;
-  int _result = -1;
-  int selectedSortBy = -1;
+  int _result = 1;
+  int selectedSortBy = 1;
 
   @override
   Widget build(BuildContext context) {

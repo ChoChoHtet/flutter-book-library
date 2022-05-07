@@ -31,53 +31,61 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         iconTheme: const IconThemeData(color: Colors.grey),
         title: const SearchBarView(),
       ),
-      body: ListView(children: [
-        const SizedBox(
-          height: 30,
-        ),
-        CarouselSlider.builder(
-          itemCount: booksList.length,
-          itemBuilder: (context, itemIndex, pageViewIndex) => PlayBookItemView(
-            onTapMenu: () => _showMenuList(context),
-          ),
-          options: CarouselOptions(
-              autoPlayCurve: Curves.fastOutSlowIn,
-              enlargeCenterPage: true,
-              enableInfiniteScroll: false,
-              viewportFraction: 0.6,
-              initialPage: 0),
-        ),
-        const SizedBox(
-          height: 30,
-        ),
-        TabBar(
+      body: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return [
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  CarouselSlider.builder(
+                    itemCount: booksList.length,
+                    itemBuilder: (context, itemIndex, pageViewIndex) =>
+                        PlayBookItemView(
+                      onTapMenu: () => _showMenuList(context),
+                    ),
+                    options: CarouselOptions(
+                        autoPlayCurve: Curves.fastOutSlowIn,
+                        enlargeCenterPage: true,
+                        enableInfiniteScroll: false,
+                        viewportFraction: 0.6,
+                        initialPage: 0),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  TabBar(
+                      controller: _tabController,
+                      unselectedLabelColor: Colors.grey,
+                      labelColor: Colors.blueAccent,
+                      labelPadding: const EdgeInsets.symmetric(vertical: 10),
+                      indicatorWeight: 4,
+                      indicatorSize: TabBarIndicatorSize.label,
+                      tabs: const [
+                        Text(
+                          "Ebooks",
+                          style: TextStyle(fontSize: mediumTextSize),
+                        ),
+                        Text(
+                          "Audiobooks",
+                          style: TextStyle(fontSize: mediumTextSize),
+                        ),
+                      ]),
+                  const Divider(
+                    height: 1,
+                    thickness: 1,
+                  ),
+                ],
+              ),
+            )
+          ];
+        },
+        body:TabBarView(
             controller: _tabController,
-            unselectedLabelColor: Colors.grey,
-            labelColor: Colors.blueAccent,
-            labelPadding: const EdgeInsets.symmetric(vertical: 10),
-            indicatorWeight: 4,
-            indicatorSize: TabBarIndicatorSize.label,
-            tabs: const [
-              Text(
-                "Ebooks",
-                style: TextStyle(fontSize: mediumTextSize),
-              ),
-              Text(
-                "Audiobooks",
-                style: TextStyle(fontSize: mediumTextSize),
-              ),
-            ]),
-        const Divider(
-          height: 1,
-          thickness: 1,
-        ),
-        SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: TabBarView(
-              controller: _tabController,
-              children: const [EBookPage(), AudioBookPage()]),
-        ),
-      ]),
+            children: const [EBookPage(), AudioBookPage()]),
+      ),
     );
   }
 

@@ -7,11 +7,17 @@ import 'package:flutter/material.dart';
 import '../resource/dimen.dart';
 import '../widgets/search_bar_view.dart';
 
-class LibraryPage extends StatelessWidget{
+class LibraryPage extends StatefulWidget{
   const LibraryPage({Key? key}) : super(key: key);
 
   @override
+  State<LibraryPage> createState() => _LibraryPageState();
+}
+
+class _LibraryPageState extends State<LibraryPage>  with TickerProviderStateMixin {
+  @override
   Widget build(BuildContext context) {
+    TabController _tabController = TabController(length: 2, vsync: this);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -20,7 +26,42 @@ class LibraryPage extends StatelessWidget{
         iconTheme: const IconThemeData(color: Colors.grey),
         title: const SearchBarView(),
       ),
-      body: const LibraryTabSection(),
+      body: NestedScrollView(
+         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled)  => [
+           SliverToBoxAdapter(
+             child: Column(
+               children: [
+                 TabBar(
+                   controller: _tabController,
+                   unselectedLabelColor: Colors.black87,
+                   labelColor: Colors.blueAccent,
+                   labelPadding: const EdgeInsets.symmetric(vertical: 10),
+                   indicatorWeight: 4,
+                   indicatorSize: TabBarIndicatorSize.label,
+                   tabs: const [
+                     Text(
+                       libraryTab1,
+                       style: TextStyle(fontSize: normalTextSize),
+                     ),
+                     Text(
+                       libraryTab2,
+                       style: TextStyle(fontSize: normalTextSize),
+                     ),
+                   ],
+                 ),
+                 const Divider(height: 1,thickness: 1,),
+               ],
+             ),
+           ),
+         ],
+        body: TabBarView(
+          controller: _tabController,
+          children: const [
+            YourBookPage(),
+            YourShelvesPage(),
+          ],
+        ),
+      ),
     );
   }
 }
