@@ -1,7 +1,8 @@
 import 'package:book_library/resource/dimen.dart';
-import 'package:book_library/viewItems/item_book_library_view.dart';
+import 'package:book_library/viewItems/item_grid_view.dart';
 import 'package:book_library/viewItems/item_list_view.dart';
 import 'package:book_library/widgets/custom_chip_view.dart';
+import 'package:book_library/widgets/custom_vertical_divider.dart';
 import 'package:book_library/widgets/normal_text.dart';
 import 'package:book_library/widgets/title_text.dart';
 import 'package:flutter/material.dart';
@@ -106,11 +107,9 @@ class _YourBookPageState extends State<YourBookPage> {
                                         : Colors.black87),
                               ),
                             ),
-                            Container(
-                              width: 1,
+                            CustomVerticalDivider(
                               height: 18,
-                              color:
-                                  chipPurchase ? Colors.white : Colors.black87,
+                              color: chipPurchase ? Colors.white : Colors.black87,
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 10),
@@ -400,7 +399,9 @@ class ListMenuSection extends StatelessWidget {
             ? ListView.separated(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                separatorBuilder: (context,index) => const SizedBox(height: 30,),
+                separatorBuilder: (context, index) => const SizedBox(
+                      height: 30,
+                    ),
                 itemCount: 12,
                 itemBuilder: (context, index) => const ItemListView())
             : GridView.builder(
@@ -412,6 +413,6 @@ class ListMenuSection extends StatelessWidget {
                   crossAxisCount: _result == 2 ? 2 : 3,
                   childAspectRatio: _result == 2 ? 0.8 : 0.5,
                 ),
-                itemBuilder: (context, index) => const ItemBookLibraryView()));
+                itemBuilder: (context, index) => const ItemGridView()));
   }
 }

@@ -1,5 +1,5 @@
 import 'package:book_library/widgets/title_with_see_more_view.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../viewItems/item_book_view.dart';
 
@@ -8,6 +8,7 @@ class HorizontalBookView extends StatelessWidget {
   final String imgPath;
   final String description;
   final String author;
+  final VoidCallback onTapBook;
 
   const HorizontalBookView({
     Key? key,
@@ -15,6 +16,7 @@ class HorizontalBookView extends StatelessWidget {
     required this.imgPath,
     required this.description,
     required this.author,
+    required this.onTapBook,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -32,11 +34,14 @@ class HorizontalBookView extends StatelessWidget {
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: 8,
-              itemBuilder: (builder, index) =>  ItemBookView(
-                    imgPath: imgPath,
-                    description: "Learn UX for designer example books",
-                    author: "Jeff Gothelf",
-                  )),
+              itemBuilder: (builder, index) => InkWell(
+                onTap: onTapBook,
+                child: ItemBookView(
+                      imgPath: imgPath,
+                      description: "Learn UX for designer example books",
+                      author: "Jeff Gothelf",
+                    ),
+              )),
         )
       ],
     );

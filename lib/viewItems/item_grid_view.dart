@@ -4,8 +4,8 @@ import 'package:book_library/widgets/custom_icon_view.dart';
 import 'package:book_library/widgets/normal_text.dart';
 import 'package:flutter/material.dart';
 
-class ItemBookLibraryView extends StatelessWidget {
-  const ItemBookLibraryView({Key? key}) : super(key: key);
+class ItemGridView extends StatelessWidget {
+  const ItemGridView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
