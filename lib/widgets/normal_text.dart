@@ -10,7 +10,7 @@ class NormalText extends StatelessWidget {
   const NormalText({
     Key? key,
     required this.text,
-    this.color = Colors.blueGrey,
+    this.color = Colors.black87,
     this.textSize = normalTextSize,
     this.fontWeight = FontWeight.normal
   }) : super(key: key);

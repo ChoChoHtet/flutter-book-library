@@ -38,7 +38,7 @@ class _LibraryTabSectionState extends State<LibraryTabSection>
   @override
   Widget build(BuildContext context) {
     TabController _tabController = TabController(length: 2, vsync: this);
-    return Column(
+    return ListView(
       children: [
         TabBar(
           controller: _tabController,
@@ -60,7 +60,7 @@ class _LibraryTabSectionState extends State<LibraryTabSection>
         ),
         const Divider(height: 1,thickness: 1,),
         SizedBox(
-          height: MediaQuery.of(context).size.height  * 0.7,
+          height: MediaQuery.of(context).size.height * 0.8,
           child: TabBarView(
             controller: _tabController,
             children: const [

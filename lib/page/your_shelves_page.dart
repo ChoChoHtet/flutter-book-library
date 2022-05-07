@@ -1,3 +1,5 @@
+
+
 import 'package:book_library/page/create_shelves_page.dart';
 import 'package:book_library/resource/dimen.dart';
 import 'package:book_library/viewItems/item_shelve_view.dart';
@@ -9,29 +11,38 @@ class YourShelvesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          margin: const EdgeInsets.only(top: 16),
-          child: ListView.builder(
-              itemCount: 3,
-              itemBuilder: (context, index) => Column(
-                children: const [
-                  ItemShelveView(),
-                  Divider(height: 2,color: Colors.black87,),
-                ],
-              )),
+    return Scaffold(
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height * 0.7,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: Container(
+                margin: const EdgeInsets.only(top: 16),
+                child: ListView.builder(
+                    itemCount: 3,
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) => Column(
+                      children: const [
+                        ItemShelveView(),
+                        Divider(height: 2,color: Colors.black87,),
+                      ],
+                    )),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: CreateNewButton(
+                onTapCreate: () {
+                  debugPrint("On Tap Create");
+                  _navigateCreateShelveScreen(context);
+                },
+              ),
+            )
+          ],
         ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: CreateNewButton(
-            onTapCreate: () {
-              debugPrint("On Tap Create");
-              _navigateCreateShelveScreen(context);
-            },
-          ),
-        )
-      ],
+      ),
     );
   }
 

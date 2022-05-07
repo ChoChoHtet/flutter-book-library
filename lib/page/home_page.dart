@@ -8,13 +8,21 @@ import '../viewItems/play_book_item_view.dart';
 import '../widgets/normal_text.dart';
 import '../widgets/search_bar_view.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final List<String> booksList = [imgUrl, imgUrl, imgUrl];
+
   final List<String> tabList = ["Ebooks,Audiobooks"];
 
   @override
   Widget build(BuildContext context) {
+    TabController _tabController = TabController(length: 2, vsync: this);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -23,34 +31,57 @@ class HomePage extends StatelessWidget {
         iconTheme: const IconThemeData(color: Colors.grey),
         title: const SearchBarView(),
       ),
-      body: ListView(
-        children: [
-          const SizedBox(
-            height: 30,
+      body: ListView(children: [
+        const SizedBox(
+          height: 30,
+        ),
+        CarouselSlider.builder(
+          itemCount: booksList.length,
+          itemBuilder: (context, itemIndex, pageViewIndex) => PlayBookItemView(
+            onTapMenu: () => _showMenuList(context),
           ),
-          CarouselSlider.builder(
-            itemCount: booksList.length,
-            itemBuilder: (context, itemIndex, pageViewIndex) =>
-                PlayBookItemView(
-              onTapMenu: () => _showMenuList(context),
-            ),
-            options: CarouselOptions(
-                autoPlayCurve: Curves.fastOutSlowIn,
-                enlargeCenterPage: true,
-                enableInfiniteScroll: false,
-                viewportFraction: 0.6,
-                initialPage: 0),
-          ),
-          const SizedBox(
-            height: 30,
-          ),
-          BookTabSection(tabList: tabList),
-        ],
-      ),
+          options: CarouselOptions(
+              autoPlayCurve: Curves.fastOutSlowIn,
+              enlargeCenterPage: true,
+              enableInfiniteScroll: false,
+              viewportFraction: 0.6,
+              initialPage: 0),
+        ),
+        const SizedBox(
+          height: 30,
+        ),
+        TabBar(
+            controller: _tabController,
+            unselectedLabelColor: Colors.grey,
+            labelColor: Colors.blueAccent,
+            labelPadding: const EdgeInsets.symmetric(vertical: 10),
+            indicatorWeight: 4,
+            indicatorSize: TabBarIndicatorSize.label,
+            tabs: const [
+              Text(
+                "Ebooks",
+                style: TextStyle(fontSize: mediumTextSize),
+              ),
+              Text(
+                "Audiobooks",
+                style: TextStyle(fontSize: mediumTextSize),
+              ),
+            ]),
+        const Divider(
+          height: 1,
+          thickness: 1,
+        ),
+        SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: TabBarView(
+              controller: _tabController,
+              children: const [EBookPage(), AudioBookPage()]),
+        ),
+      ]),
     );
   }
 
-  void _onTapMenuItem(String action){
+  void _onTapMenuItem(String action) {
     //ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("onTap Menu")),);
     debugPrint("on Tap Menu: $action");
   }
@@ -64,7 +95,8 @@ class HomePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 10),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -97,34 +129,34 @@ class HomePage extends StatelessWidget {
                   ),
                   const Divider(),
                   Wrap(
-                    children:  [
+                    children: [
                       ListTile(
                         leading: const Icon(Icons.remove_circle_outline),
                         title: const NormalText(
                           text: menuRemoveDownload,
                         ),
-                        onTap:() => _onTapMenuItem(menuRemoveDownload),
+                        onTap: () => _onTapMenuItem(menuRemoveDownload),
                       ),
                       ListTile(
                         leading: const Icon(Icons.delete),
                         title: const NormalText(
                           text: menuDeleteLibrary,
                         ),
-                        onTap:() => _onTapMenuItem(menuDeleteLibrary),
+                        onTap: () => _onTapMenuItem(menuDeleteLibrary),
                       ),
                       ListTile(
                         leading: const Icon(Icons.add),
                         title: const NormalText(
                           text: menuAddToShelf,
                         ),
-                        onTap:() => _onTapMenuItem(menuAddToShelf),
+                        onTap: () => _onTapMenuItem(menuAddToShelf),
                       ),
                       ListTile(
                         leading: const Icon(Icons.book),
                         title: const NormalText(
                           text: menuAddThisBook,
                         ),
-                        onTap:() => _onTapMenuItem(menuAddThisBook),
+                        onTap: () => _onTapMenuItem(menuAddThisBook),
                       )
                     ],
                   ),
@@ -160,6 +192,7 @@ class _BookTabSectionState extends State<BookTabSection>
   Widget build(BuildContext context) {
     TabController _tabController = TabController(length: 2, vsync: this);
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         TabBar(
             controller: _tabController,
@@ -182,11 +215,13 @@ class _BookTabSectionState extends State<BookTabSection>
           height: 1,
           thickness: 1,
         ),
-        SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: TabBarView(
-              controller: _tabController,
-              children: const [EBookPage(), AudioBookPage()]),
+        Expanded(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: TabBarView(
+                controller: _tabController,
+                children: const [EBookPage(), AudioBookPage()]),
+          ),
         ),
       ],
     );
