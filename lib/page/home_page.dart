@@ -1,3 +1,5 @@
+import 'package:book_library/bloc/home_bloc.dart';
+import 'package:book_library/data/vos/overview_vo.dart';
 import 'package:book_library/page/audio_book_page.dart';
 import 'package:book_library/page/e_book_page.dart';
 import 'package:book_library/page/search_page.dart';
@@ -5,12 +7,13 @@ import 'package:book_library/resource/dimen.dart';
 import 'package:book_library/resource/string.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../viewItems/play_book_item_view.dart';
 import '../widgets/normal_text.dart';
 import '../widgets/search_bar_view.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key? key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -24,73 +27,82 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     TabController _tabController = TabController(length: 2, vsync: this);
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        toolbarHeight: 70,
-        iconTheme: const IconThemeData(color: Colors.grey),
-        title: InkWell(
-          onTap: () {
-          _navigateTSearchScreen(context);
-          },
-          child: const SearchBarView(),
+    return ChangeNotifierProvider(
+      create: (context) => HomeBloc(),
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          toolbarHeight: 70,
+          iconTheme: const IconThemeData(color: Colors.grey),
+          title: InkWell(
+            onTap: () {
+              _navigateTSearchScreen(context);
+            },
+            child: const SearchBarView(),
+          ),
         ),
-      ),
-      body: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return [
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  CarouselSlider.builder(
-                    itemCount: booksList.length,
-                    itemBuilder: (context, itemIndex, pageViewIndex) =>
-                        PlayBookItemView(
-                      onTapMenu: () => _showMenuList(context),
+        body: NestedScrollView(
+          headerSliverBuilder: (context, innerBoxIsScrolled) {
+            return [
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 30,
                     ),
-                    options: CarouselOptions(
-                        autoPlayCurve: Curves.fastOutSlowIn,
-                        enlargeCenterPage: true,
-                        enableInfiniteScroll: false,
-                        viewportFraction: 0.6,
-                        initialPage: 0),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  TabBar(
-                      controller: _tabController,
-                      unselectedLabelColor: Colors.grey,
-                      labelColor: Colors.blueAccent,
-                      labelPadding: const EdgeInsets.symmetric(vertical: 10),
-                      indicatorWeight: 4,
-                      indicatorSize: TabBarIndicatorSize.label,
-                      tabs: const [
-                        Text(
-                          "Ebooks",
-                          style: TextStyle(fontSize: mediumTextSize),
-                        ),
-                        Text(
-                          "Audiobooks",
-                          style: TextStyle(fontSize: mediumTextSize),
-                        ),
-                      ]),
-                  const Divider(
-                    height: 1,
-                    thickness: 1,
-                  ),
-                ],
+                    CarouselSlider.builder(
+                      itemCount: booksList.length,
+                      itemBuilder: (context, itemIndex, pageViewIndex) =>
+                          PlayBookItemView(
+                        onTapMenu: () => _showMenuList(context),
+                      ),
+                      options: CarouselOptions(
+                          autoPlayCurve: Curves.fastOutSlowIn,
+                          enlargeCenterPage: true,
+                          enableInfiniteScroll: false,
+                          viewportFraction: 0.6,
+                          initialPage: 0),
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    TabBar(
+                        controller: _tabController,
+                        unselectedLabelColor: Colors.grey,
+                        labelColor: Colors.blueAccent,
+                        labelPadding: const EdgeInsets.symmetric(vertical: 10),
+                        indicatorWeight: 4,
+                        indicatorSize: TabBarIndicatorSize.label,
+                        tabs: const [
+                          Text(
+                            "Ebooks",
+                            style: TextStyle(fontSize: mediumTextSize),
+                          ),
+                          Text(
+                            "Audiobooks",
+                            style: TextStyle(fontSize: mediumTextSize),
+                          ),
+                        ]),
+                    const Divider(
+                      height: 1,
+                      thickness: 1,
+                    ),
+                  ],
+                ),
+              )
+            ];
+          },
+          body: TabBarView(controller: _tabController, children: [
+            Selector<HomeBloc, List<OverviewVO>>(
+              selector: (context, bloc) => bloc.overviewList,
+              builder: (context, overviewList, child) => EBookPage(
+                overviewList: overviewList,
               ),
-            )
-          ];
-        },
-        body: TabBarView(
-            controller: _tabController,
-            children: const [EBookPage(), AudioBookPage()]),
+            ),
+            const AudioBookPage(),
+          ]),
+        ),
       ),
     );
   }
@@ -192,59 +204,5 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 ],
               ),
             ));
-  }
-}
-
-class BookTabSection extends StatefulWidget {
-  const BookTabSection({
-    Key? key,
-    required this.tabList,
-  }) : super(key: key);
-
-  final List<String> tabList;
-
-  @override
-  State<BookTabSection> createState() => _BookTabSectionState();
-}
-
-class _BookTabSectionState extends State<BookTabSection>
-    with TickerProviderStateMixin {
-  @override
-  Widget build(BuildContext context) {
-    TabController _tabController = TabController(length: 2, vsync: this);
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        TabBar(
-            controller: _tabController,
-            unselectedLabelColor: Colors.grey,
-            labelColor: Colors.blueAccent,
-            labelPadding: const EdgeInsets.symmetric(vertical: 10),
-            indicatorWeight: 4,
-            indicatorSize: TabBarIndicatorSize.label,
-            tabs: const [
-              Text(
-                "Ebooks",
-                style: TextStyle(fontSize: mediumTextSize),
-              ),
-              Text(
-                "Audiobooks",
-                style: TextStyle(fontSize: mediumTextSize),
-              ),
-            ]),
-        const Divider(
-          height: 1,
-          thickness: 1,
-        ),
-        Expanded(
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: TabBarView(
-                controller: _tabController,
-                children: const [EBookPage(), AudioBookPage()]),
-          ),
-        ),
-      ],
-    );
   }
 }

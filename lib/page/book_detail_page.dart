@@ -73,7 +73,7 @@ class BookDetailPage extends StatelessWidget {
               const SizedBox(height: margin1X),
               const RatingAndReviewSection(),
               const SizedBox(height: margin1X),
-              HorizontalBookView(
+              /*HorizontalBookView(
                 title: "Continue the series",
                 imgPath: imgUrl3,
                 description: "Shadow Rider",
@@ -89,7 +89,7 @@ class BookDetailPage extends StatelessWidget {
                 author: "John san",
                 onTapSeeMore: ()=> _navigateTSeeMoreScreen(context,"More by Christine Feehan"),
                 onTapBook: () => _navigateToBookDetailScreen(context),
-              ),
+              ),*/
               const SizedBox(height: margin1X),
               const WriteReviewSection(),
               const SizedBox(height: margin1X),

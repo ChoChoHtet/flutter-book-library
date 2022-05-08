@@ -27,8 +27,8 @@ class ItemBookView extends StatelessWidget {
             height: 180,
             decoration:  BoxDecoration(
               borderRadius: BorderRadius.circular(8),
-              image: const DecorationImage(
-                  image: NetworkImage(imgUrl3), fit: BoxFit.cover),
+              image: DecorationImage(
+                  image: NetworkImage(imgPath), fit: BoxFit.cover),
             ),
             child: const Align(
               alignment: Alignment.topRight,

@@ -1,3 +1,5 @@
+import 'package:book_library/data/vos/book_vo.dart';
+import 'package:book_library/resource/string.dart';
 import 'package:book_library/widgets/title_with_see_more_view.dart';
 import 'package:flutter/material.dart';
 
@@ -5,18 +7,14 @@ import '../viewItems/item_book_view.dart';
 
 class HorizontalBookView extends StatelessWidget {
   final String title;
-  final String imgPath;
-  final String description;
-  final String author;
+  final List<BookVO> bookList;
   final VoidCallback onTapBook;
   final VoidCallback onTapSeeMore;
 
   const HorizontalBookView(
       {Key? key,
       required this.title,
-      required this.imgPath,
-      required this.description,
-      required this.author,
+      required this.bookList,
       required this.onTapBook,
       required this.onTapSeeMore})
       : super(key: key);
@@ -38,13 +36,13 @@ class HorizontalBookView extends StatelessWidget {
           height: 250,
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: 8,
+              itemCount: bookList.length,
               itemBuilder: (builder, index) => InkWell(
                     onTap: onTapBook,
                     child: ItemBookView(
-                      imgPath: imgPath,
-                      description: "Learn UX for designer example books",
-                      author: "Jeff Gothelf",
+                      imgPath: bookList[index].bookImage ?? imgUrl3,
+                      description: bookList[index].title ?? "",
+                      author: bookList[index].author ?? "",
                     ),
                   )),
         )
