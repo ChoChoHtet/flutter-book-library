@@ -3,6 +3,7 @@ import 'package:book_library/resource/string.dart';
 import 'package:book_library/viewItems/item_book_view.dart';
 import 'package:flutter/material.dart';
 
+import '../viewItems/item_grid_view.dart';
 import '../widgets/title_text.dart';
 
 class SeeMoreDetailPage extends StatelessWidget {
@@ -28,22 +29,25 @@ class SeeMoreDetailPage extends StatelessWidget {
             title: TitleText(title: title),
           )
         ],
-        body: Container(
-          padding: const EdgeInsets.symmetric(horizontal: paddingNormal),
-          child: GridView.builder(
-            itemCount: 8,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 0.8,
-                mainAxisSpacing: 8
-              ),
-              itemBuilder: (context, index) => const ItemBookView(
-                    imgPath: imgUrl3,
-                    description: "Learn UX for designer example books",
-                    author: "Jeff Gothelf",
-                  )),
+        body: MediaQuery.removePadding(
+          context: context,
+          removeTop: true,
+          child: Container(
+            padding: const EdgeInsets.only(left: paddingNormal),
+            child: GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                itemCount: 12,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio:0.8,
+                    crossAxisSpacing: 10
+                ),
+                itemBuilder: (context, index) => const ItemGridView(),),
+          ),
         ),
-      ),
+        ),
     );
   }
 }

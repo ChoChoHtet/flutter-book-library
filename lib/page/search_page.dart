@@ -57,16 +57,16 @@ class SearchPage extends StatelessWidget {
       body: ListView(
         children: const [
           ListTile(
-            leading: Icon(Icons.book),
+            leading: Icon(Icons.show_chart,color: Colors.blue,),
             title: Text("Top Selling"),
           ),
           ListTile(
-            leading: Icon(Icons.book),
-            title: Text("Top Selling"),
+            leading: Icon(Icons.new_releases_outlined,color: Colors.blue,),
+            title: Text("New releases",),
           ),
           ListTile(
-            leading: Icon(Icons.book),
-            title: Text("Top Selling"),
+            leading: Icon(Icons.store_outlined,color: Colors.blue,),
+            title: Text("Bookshop"),
           )
         ],
       ),

@@ -18,7 +18,7 @@ class ItemBookView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 150,
-      margin: const EdgeInsets.only(right: 10),
+      margin: const EdgeInsets.only(right: paddingNormal),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

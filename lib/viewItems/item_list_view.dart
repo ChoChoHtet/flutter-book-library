@@ -7,27 +7,30 @@ class ItemListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: Image.network(imgUrl3,width: 60,height: 100,fit: BoxFit.cover,),
-        ),
-        const SizedBox(
-          width: 20,
-        ),
-        const SizedBox(
-          width: 200,
-          child: BookInfoSection(),
-        ),
-        const Spacer(),
-        const Icon(
-          Icons.download_done_sharp,size: normalIconSize,),
-        const SizedBox(width: 30,),
-        const Icon(
-          Icons.more_horiz_rounded,size: normalIconSize,),
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(right: paddingNormal),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.network(imgUrl3,width: 60,height: 100,fit: BoxFit.cover,),
+          ),
+          const SizedBox(
+            width: 20,
+          ),
+          const SizedBox(
+            width: 200,
+            child: BookInfoSection(),
+          ),
+          const Spacer(),
+          const Icon(
+            Icons.download_done_sharp,size: normalIconSize,),
+          const SizedBox(width: 30,),
+          const Icon(
+            Icons.more_horiz_rounded,size: normalIconSize,),
+        ],
+      ),
     );
   }
 }

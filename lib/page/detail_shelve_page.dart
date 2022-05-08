@@ -76,7 +76,7 @@ class _DetailShelvePageState extends State<DetailShelvePage> {
                     debugPrint("Edited shelf name:$shelfName");
                     setState(() {
                       actionShelf = ShelfAction.done;
-                      editedShelfName = shelfName ;
+                      editedShelfName = shelfName;
                     });
                   },
                 ),
@@ -134,8 +134,9 @@ class _DetailShelvePageState extends State<DetailShelvePage> {
   _showShelveMenu(BuildContext context) => showModalBottomSheet(
         context: context,
         builder: (context) => StatefulBuilder(builder: (context, setState) {
-          return SizedBox(
+          return Container(
             height: MediaQuery.of(context).size.height * 0.25,
+            padding: const EdgeInsets.only(top: margin1X),
             child: Wrap(
               children: [
                 ListTile(
@@ -333,6 +334,7 @@ class ShelfInfoAndEditView extends StatelessWidget {
     return Container(
       child: shelfAction == ShelfAction.edit
           ? ShelfEditView(
+              shelfName: shelfName,
               onTapDoneEdit: onTapDoneEdit,
             )
           : ShelfInfoView(
@@ -344,18 +346,20 @@ class ShelfInfoAndEditView extends StatelessWidget {
 }
 
 class ShelfEditView extends StatelessWidget {
-  ShelfEditView({
+  const ShelfEditView({
     Key? key,
     required this.onTapDoneEdit,
+    required this.shelfName,
   }) : super(key: key);
-
-  final TextEditingController _shelfName = TextEditingController();
+  final String shelfName;
   final Function(String) onTapDoneEdit;
+
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController _shelfName = TextEditingController(text: shelfName);
     return Container(
-      padding:  const EdgeInsets.symmetric(horizontal: paddingNormal),
+      padding: const EdgeInsets.symmetric(horizontal: paddingNormal),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -411,7 +415,8 @@ class ShelfEditView extends StatelessWidget {
             controller: _shelfName,
             decoration: const InputDecoration(
                 labelText: "Shelf name",
-                labelStyle: TextStyle(fontSize: 25, fontWeight: FontWeight.w700)),
+                labelStyle:
+                    TextStyle(fontSize: 25, fontWeight: FontWeight.w700)),
           )
         ],
       ),

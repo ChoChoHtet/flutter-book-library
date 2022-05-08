@@ -66,11 +66,14 @@ class SortByView extends StatelessWidget {
           ),
         ),
         const Spacer(),
-        InkWell(
-          onTap: onTapList,
-          child: const Icon(
-            Icons.list_alt,
-            size: normalIconSize,
+        Padding(
+          padding: const EdgeInsets.only(right: paddingNormal),
+          child: InkWell(
+            onTap: onTapList,
+            child: const Icon(
+              Icons.list_alt,
+              size: normalIconSize,
+            ),
           ),
         )
       ],
@@ -106,6 +109,7 @@ class ListMenuSection extends StatelessWidget {
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: _result == 2 ? 2 : 3,
               childAspectRatio: _result == 2 ? 0.8 : 0.5,
+              crossAxisSpacing: 10
             ),
             itemBuilder: (context, index) => const ItemGridView()));
   }

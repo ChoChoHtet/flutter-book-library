@@ -17,6 +17,9 @@ class EBookPage extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         children: [
+          const SizedBox(
+            height: paddingNormal,
+          ),
           HorizontalBookView(
             title: revision,
             imgPath: imgUrl,
@@ -26,7 +29,7 @@ class EBookPage extends StatelessWidget {
             onTapBook: () => _navigateToBookDetailScreen(context),
           ),
           const SizedBox(
-            height: 30,
+            height: paddingNormal,
           ),
           HorizontalBookView(
             title: ebookTitle,
@@ -37,7 +40,7 @@ class EBookPage extends StatelessWidget {
             onTapBook: () {},
           ),
           const SizedBox(
-            height: 30,
+            height: paddingNormal,
           ),
           HorizontalBookView(
             title: onYourWishlist,

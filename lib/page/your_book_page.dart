@@ -22,7 +22,7 @@ class _YourBookPageState extends State<YourBookPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        padding: const EdgeInsets.only(left: 16, right: 16, top: 20),
+        padding: const EdgeInsets.only(left: 16, top: 20),
         child: SingleChildScrollView(
           child: Column(
             children: [

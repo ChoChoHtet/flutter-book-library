@@ -1,4 +1,5 @@
 import 'package:book_library/resource/color.dart';
+import 'package:book_library/resource/dimen.dart';
 import 'package:book_library/resource/string.dart';
 import 'package:book_library/widgets/custom_icon_view.dart';
 import 'package:book_library/widgets/normal_text.dart';
@@ -43,9 +44,8 @@ class BookCoverSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // width: MediaQuery.of(context).size.width *0.2,
       height: MediaQuery.of(context).size.height * 0.22,
-      margin: const EdgeInsets.only(right: 14),
+      margin: const EdgeInsets.only(right: paddingNormal),
       padding: const EdgeInsets.only(bottom: 10, right: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
