@@ -1,5 +1,6 @@
 import 'package:book_library/page/audio_book_page.dart';
 import 'package:book_library/page/e_book_page.dart';
+import 'package:book_library/page/search_page.dart';
 import 'package:book_library/resource/dimen.dart';
 import 'package:book_library/resource/string.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -29,7 +30,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         toolbarHeight: 70,
         iconTheme: const IconThemeData(color: Colors.grey),
-        title: const SearchBarView(),
+        title: InkWell(
+          onTap: () {
+          _navigateTSearchScreen(context);
+          },
+          child: const SearchBarView(),
+        ),
       ),
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
@@ -82,10 +88,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             )
           ];
         },
-        body:TabBarView(
+        body: TabBarView(
             controller: _tabController,
             children: const [EBookPage(), AudioBookPage()]),
       ),
+    );
+  }
+
+  void _navigateTSearchScreen(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const SearchPage()),
     );
   }
 
