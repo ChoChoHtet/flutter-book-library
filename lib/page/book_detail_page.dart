@@ -614,8 +614,8 @@ class BookCoverAndTitleSection extends StatelessWidget {
                   Text(
                     "Finding me: A Memoir",
                     style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w600,
+                      fontSize: largeTextSize,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   NormalText(text: "Viola Davis"),

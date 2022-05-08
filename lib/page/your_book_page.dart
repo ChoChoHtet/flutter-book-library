@@ -1,10 +1,6 @@
 import 'package:book_library/resource/dimen.dart';
-import 'package:book_library/viewItems/item_grid_view.dart';
-import 'package:book_library/viewItems/item_list_view.dart';
-import 'package:book_library/widgets/custom_chip_view.dart';
 import 'package:book_library/widgets/custom_vertical_divider.dart';
-import 'package:book_library/widgets/normal_text.dart';
-import 'package:book_library/widgets/title_text.dart';
+import 'package:book_library/widgets/sort_and_list_menu_view.dart';
 import 'package:flutter/material.dart';
 
 class YourBookPage extends StatefulWidget {
@@ -109,7 +105,8 @@ class _YourBookPageState extends State<YourBookPage> {
                             ),
                             CustomVerticalDivider(
                               height: 18,
-                              color: chipPurchase ? Colors.white : Colors.black87,
+                              color:
+                                  chipPurchase ? Colors.white : Colors.black87,
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 10),
@@ -174,47 +171,21 @@ class _YourBookPageState extends State<YourBookPage> {
               const SizedBox(
                 height: 29,
               ),
-              Row(
-                children: [
-                  InkWell(
-                    onTap: () {
-                      var sortByController = _showMenuSort(context);
-                      sortByController.then((value) {
-                        setState(() {});
-                      });
-                    },
-                    child: const Icon(
-                      Icons.sort,
-                      size: normalIconSize,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8),
-                    child: NormalText(
-                      text: "Sort by: ${getSortTitle(selectedSortBy)}",
-                      textSize: 16,
-                    ),
-                  ),
-                  const Spacer(),
-                  InkWell(
-                    onTap: () {
-                      debugPrint("On Tap List Menu");
-                      var bottomSheetController = _showMenuList(context);
-                      bottomSheetController.then((value) {
-                        setState(() {});
-                      });
-                    },
-                    child: const Icon(
-                      Icons.list_alt,
-                      size: normalIconSize,
-                    ),
-                  )
-                ],
-              ),
-              const SizedBox(
-                height: 29,
-              ),
-              ListMenuSection(result: _result)
+              SortAndListMenuView(
+                  listType: _result,
+                  sortByName: getSortTitle(selectedSortBy),
+                  onTapSortBy: () {
+                    var sortByController = _showMenuSort(context);
+                    sortByController.then((value) {
+                      setState(() {});
+                    });
+                  },
+                  onTapList: () {
+                    var bottomSheetController = _showMenuList(context);
+                    bottomSheetController.then((value) {
+                      setState(() {});
+                    });
+                  }),
             ],
           ),
         ),
@@ -381,38 +352,4 @@ class _YourBookPageState extends State<YourBookPage> {
           );
         }),
       );
-}
-
-class ListMenuSection extends StatelessWidget {
-  const ListMenuSection({
-    Key? key,
-    required int result,
-  })  : _result = result,
-        super(key: key);
-
-  final int _result;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        child: _result == 1
-            ? ListView.separated(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                separatorBuilder: (context, index) => const SizedBox(
-                      height: 30,
-                    ),
-                itemCount: 12,
-                itemBuilder: (context, index) => const ItemListView())
-            : GridView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                itemCount: 12,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: _result == 2 ? 2 : 3,
-                  childAspectRatio: _result == 2 ? 0.8 : 0.5,
-                ),
-                itemBuilder: (context, index) => const ItemGridView()));
-  }
 }

@@ -1,6 +1,5 @@
-
-
 import 'package:book_library/page/create_shelves_page.dart';
+import 'package:book_library/page/detail_shelve_page.dart';
 import 'package:book_library/resource/dimen.dart';
 import 'package:book_library/viewItems/item_shelve_view.dart';
 import 'package:book_library/widgets/normal_text.dart';
@@ -24,13 +23,19 @@ class YourShelvesPage extends StatelessWidget {
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemBuilder: (context, index) => Column(
-                      children:  [
-                        InkWell(
-                          onTap: () => debugPrint("On tap shelve details"),
-                            child: const ItemShelveView()),
-                        const Divider(height: 2,color: Colors.black87,),
-                      ],
-                    )),
+                          children: [
+                            InkWell(
+                                onTap: () => _navigateDetailShelveScreen(
+                                    context,
+                                    "10 International Design Books to Read",
+                                    3),
+                                child: const ItemShelveView()),
+                            const Divider(
+                              height: 2,
+                              color: Colors.black87,
+                            ),
+                          ],
+                        )),
               ),
             ),
             Align(
@@ -53,6 +58,19 @@ class YourShelvesPage extends StatelessWidget {
       context,
       MaterialPageRoute(
         builder: (context) => CreateShelvesPage(),
+      ),
+    );
+  }
+
+  void _navigateDetailShelveScreen(
+      BuildContext context, String shelveName, int noOfBook) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DetailShelvePage(
+          shelvesName: shelveName,
+          noOfBooks: noOfBook,
+        ),
       ),
     );
   }

@@ -14,3 +14,4 @@ const smallTextSize = 14.0;
 const normalTextSize = 16.0;
 const mediumTextSize = 18.0;
 const titleTextSize = 20.0;
+const largeTextSize =28.0;
