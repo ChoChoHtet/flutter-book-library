@@ -24,9 +24,11 @@ class YourShelvesPage extends StatelessWidget {
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemBuilder: (context, index) => Column(
-                      children: const [
-                        ItemShelveView(),
-                        Divider(height: 2,color: Colors.black87,),
+                      children:  [
+                        InkWell(
+                          onTap: () => debugPrint("On tap shelve details"),
+                            child: const ItemShelveView()),
+                        const Divider(height: 2,color: Colors.black87,),
                       ],
                     )),
               ),

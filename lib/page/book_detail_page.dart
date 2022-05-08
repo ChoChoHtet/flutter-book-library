@@ -1,3 +1,4 @@
+import 'package:book_library/page/see_more_detail_page.dart';
 import 'package:book_library/resource/dimen.dart';
 import 'package:book_library/widgets/horizontal_book_view.dart';
 import 'package:book_library/widgets/normal_text.dart';
@@ -77,6 +78,7 @@ class BookDetailPage extends StatelessWidget {
                 imgPath: imgUrl3,
                 description: "Shadow Rider",
                 author: "John san",
+                onTapSeeMore: ()=> _navigateTSeeMoreScreen(context,"Continue the series"),
                 onTapBook: () => _navigateToBookDetailScreen(context),
               ),
               const SizedBox(height: margin1X),
@@ -85,6 +87,7 @@ class BookDetailPage extends StatelessWidget {
                 imgPath: imgUrl3,
                 description: "Shadow Rider",
                 author: "John san",
+                onTapSeeMore: ()=> _navigateTSeeMoreScreen(context,"More by Christine Feehan"),
                 onTapBook: () => _navigateToBookDetailScreen(context),
               ),
               const SizedBox(height: margin1X),
@@ -96,7 +99,12 @@ class BookDetailPage extends StatelessWidget {
       ),
     );
   }
-
+  void _navigateTSeeMoreScreen(BuildContext context,String title) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SeeMoreDetailPage(title: title,)),
+    );
+  }
   void _navigateToBookDetailScreen(BuildContext context) {
     Navigator.push(
       context,

@@ -1,8 +1,8 @@
 import 'package:book_library/page/book_detail_page.dart';
+import 'package:book_library/page/see_more_detail_page.dart';
 import 'package:book_library/resource/dimen.dart';
 import 'package:book_library/resource/string.dart';
 import 'package:book_library/widgets/horizontal_book_view.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class EBookPage extends StatelessWidget {
@@ -22,6 +22,7 @@ class EBookPage extends StatelessWidget {
             imgPath: imgUrl,
             description: "",
             author: "author",
+            onTapSeeMore: ()=> _navigateTSeeMoreScreen(context,revision),
             onTapBook: () => _navigateToBookDetailScreen(context),
           ),
           const SizedBox(
@@ -32,6 +33,7 @@ class EBookPage extends StatelessWidget {
             imgPath: imgUrl,
             description: "",
             author: "author",
+            onTapSeeMore: ()=> _navigateTSeeMoreScreen(context,ebookTitle),
             onTapBook: () {},
           ),
           const SizedBox(
@@ -42,6 +44,7 @@ class EBookPage extends StatelessWidget {
             imgPath: imgUrl,
             description: "",
             author: "author",
+            onTapSeeMore: ()=> _navigateTSeeMoreScreen(context,onYourWishlist),
             onTapBook: () {},
           ),
         ],
@@ -53,6 +56,12 @@ class EBookPage extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const BookDetailPage()),
+    );
+  }
+  void _navigateTSeeMoreScreen(BuildContext context,String title) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) =>  SeeMoreDetailPage(title: title,)),
     );
   }
 }

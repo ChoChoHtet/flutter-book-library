@@ -24,10 +24,11 @@ class ItemBookView extends StatelessWidget {
         children: [
           Container(
             width: 150,
-            height: 200,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                  image: NetworkImage(imgUrl), fit: BoxFit.cover),
+            height: 180,
+            decoration:  BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              image: const DecorationImage(
+                  image: NetworkImage(imgUrl3), fit: BoxFit.cover),
             ),
             child: const Align(
               alignment: Alignment.topRight,
@@ -41,8 +42,8 @@ class ItemBookView extends StatelessWidget {
           const SizedBox(height: 5,),
           NormalText(text: description,),
           const SizedBox(height: 5,),
-          NormalText(text: author,textSize: smallTextSize,)
-
+          NormalText(text: author,textSize: smallTextSize,),
+          const SizedBox(height: paddingNormal,),
         ],
       ),
     );

@@ -9,22 +9,27 @@ class HorizontalBookView extends StatelessWidget {
   final String description;
   final String author;
   final VoidCallback onTapBook;
+  final VoidCallback onTapSeeMore;
 
-  const HorizontalBookView({
-    Key? key,
-    required this.title,
-    required this.imgPath,
-    required this.description,
-    required this.author,
-    required this.onTapBook,
-  }) : super(key: key);
+  const HorizontalBookView(
+      {Key? key,
+      required this.title,
+      required this.imgPath,
+      required this.description,
+      required this.author,
+      required this.onTapBook,
+      required this.onTapSeeMore})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TitleWithSeeMore(
-          title: title,
-          onTapSeeMore: () => debugPrint("on tap see more"),
+        InkWell(
+          onTap: onTapSeeMore,
+          child: TitleWithSeeMore(
+            title: title,
+            onTapSeeMore: () => debugPrint("on tap see more"),
+          ),
         ),
         const SizedBox(
           height: 20,
@@ -35,13 +40,13 @@ class HorizontalBookView extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               itemCount: 8,
               itemBuilder: (builder, index) => InkWell(
-                onTap: onTapBook,
-                child: ItemBookView(
+                    onTap: onTapBook,
+                    child: ItemBookView(
                       imgPath: imgPath,
                       description: "Learn UX for designer example books",
                       author: "Jeff Gothelf",
                     ),
-              )),
+                  )),
         )
       ],
     );
