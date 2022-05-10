@@ -1,8 +1,7 @@
 import 'package:book_library/data/vos/overview_vo.dart';
-import 'package:book_library/page/book_detail_page.dart';
-import 'package:book_library/page/see_more_detail_page.dart';
+import 'package:book_library/page/detail_book_page.dart';
+import 'package:book_library/page/detail_see_more_page.dart';
 import 'package:book_library/resource/dimen.dart';
-import 'package:book_library/resource/string.dart';
 import 'package:book_library/widgets/horizontal_book_view.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +21,8 @@ class EBookPage extends StatelessWidget {
         paddingNormal,
         5,
       ),
-      child: ListView.builder(
+      child: ListView.separated(
+        separatorBuilder: (context, index) => const SizedBox(height: 20,),
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         itemCount: overviewList.length,
@@ -31,7 +31,11 @@ class EBookPage extends StatelessWidget {
               title: overviewList[index].name ?? "",
               bookList: overviewList[index].books ?? [],
               onTapBook: () => _navigateToBookDetailScreen(context),
-              onTapSeeMore: () => _navigateToBookDetailScreen(context));
+              onTapSeeMore: () => _navigateTSeeMoreScreen(
+                  context, overviewList[index].name ?? "",
+                  overviewList[index].bestSellerDate ?? "",
+                0
+              ));
         },
       ),
     );
@@ -40,17 +44,20 @@ class EBookPage extends StatelessWidget {
   void _navigateToBookDetailScreen(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const BookDetailPage()),
+      MaterialPageRoute(builder: (context) => const DetailBookPage()),
     );
   }
 
-  void _navigateTSeeMoreScreen(BuildContext context, String title) {
+  void _navigateTSeeMoreScreen(
+      BuildContext context, String title, String date, int offset) {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => SeeMoreDetailPage(
-                title: title,
-              )),
+          builder: (context) => DetailSeeMorePage(
+            title: title,
+            date: date,
+            offset: offset,
+          )),
     );
   }
 }

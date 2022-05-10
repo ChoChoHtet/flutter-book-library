@@ -1,4 +1,4 @@
-import 'package:book_library/page/see_more_detail_page.dart';
+import 'package:book_library/page/detail_see_more_page.dart';
 import 'package:book_library/resource/dimen.dart';
 import 'package:book_library/widgets/horizontal_book_view.dart';
 import 'package:book_library/widgets/normal_text.dart';
@@ -11,8 +11,8 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 import '../resource/string.dart';
 import '../widgets/custom_vertical_divider.dart';
 
-class BookDetailPage extends StatelessWidget {
-  const BookDetailPage({Key? key}) : super(key: key);
+class DetailBookPage extends StatelessWidget {
+  const DetailBookPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class BookDetailPage extends StatelessWidget {
       body: NestedScrollView(
         floatHeaderSlivers: true,
         headerSliverBuilder: (context, innerBoxIsScrolled) => [
-           SliverAppBar(
+          SliverAppBar(
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             floating: true,
             leading: InkWell(
@@ -99,16 +99,24 @@ class BookDetailPage extends StatelessWidget {
       ),
     );
   }
-  void _navigateTSeeMoreScreen(BuildContext context,String title) {
+
+  void _navigateTSeeMoreScreen(
+      BuildContext context, String title, String date, int offset) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SeeMoreDetailPage(title: title,)),
+      MaterialPageRoute(
+          builder: (context) => DetailSeeMorePage(
+                title: title,
+                date: date,
+                offset: offset,
+              )),
     );
   }
+
   void _navigateToBookDetailScreen(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const BookDetailPage()),
+      MaterialPageRoute(builder: (context) => const DetailBookPage()),
     );
   }
 }

@@ -1,5 +1,4 @@
 import 'package:book_library/resource/dimen.dart';
-import 'package:book_library/resource/string.dart';
 import 'package:book_library/widgets/normal_text.dart';
 import 'package:flutter/material.dart';
 
@@ -17,18 +16,20 @@ class ItemBookView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 150,
+      width: MediaQuery.of(context).size.width * 0.33,
       margin: const EdgeInsets.only(right: paddingNormal),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: ListView(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
         children: [
           Container(
-            width: 150,
-            height: 180,
-            decoration:  BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
+            height: 200,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(6),
               image: DecorationImage(
-                  image: NetworkImage(imgPath), fit: BoxFit.cover),
+                image: NetworkImage(imgPath),
+                fit: BoxFit.cover,
+              ),
             ),
             child: const Align(
               alignment: Alignment.topRight,
@@ -39,11 +40,22 @@ class ItemBookView extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 5,),
-          NormalText(text: description,),
-          const SizedBox(height: 5,),
-          NormalText(text: author,textSize: smallTextSize,),
-          const SizedBox(height: paddingNormal,),
+          const SizedBox(
+            height: 5,
+          ),
+          NormalText(
+            text: description,
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          NormalText(
+            text: author,
+            textSize: smallTextSize,
+          ),
+          const SizedBox(
+            height: paddingNormal,
+          ),
         ],
       ),
     );

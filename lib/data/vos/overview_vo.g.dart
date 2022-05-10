@@ -10,6 +10,7 @@ OverviewVO _$OverviewVOFromJson(Map<String, dynamic> json) => OverviewVO(
       id: json['list_id'] as int?,
       name: json['list_name'] as String?,
       displayName: json['display_name'] as String?,
+      bestSellerDate: json['bestsellers_date'] as String?,
       updated: json['updated'] as String?,
       books: (json['books'] as List<dynamic>?)
           ?.map((e) => BookVO.fromJson(e as Map<String, dynamic>))
@@ -21,6 +22,7 @@ Map<String, dynamic> _$OverviewVOToJson(OverviewVO instance) =>
       'list_id': instance.id,
       'list_name': instance.name,
       'display_name': instance.displayName,
+      'bestsellers_date': instance.bestSellerDate,
       'updated': instance.updated,
       'books': instance.books,
     };

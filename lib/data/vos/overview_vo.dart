@@ -13,6 +13,9 @@ class OverviewVO {
   @JsonKey(name: "display_name")
   String? displayName;
 
+  @JsonKey(name: "bestsellers_date")
+  String? bestSellerDate;
+
   @JsonKey(name: "updated")
   String? updated;
 
@@ -23,6 +26,7 @@ class OverviewVO {
     this.id,
     this.name,
     this.displayName,
+    this.bestSellerDate,
     this.updated,
     this.books,
   });
@@ -31,10 +35,23 @@ class OverviewVO {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is OverviewVO && runtimeType == other.runtimeType && id == other.id;
+      other is OverviewVO &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          name == other.name &&
+          displayName == other.displayName &&
+          bestSellerDate == other.bestSellerDate &&
+          updated == other.updated &&
+          books == other.books;
 
   @override
-  int get hashCode => id.hashCode;
+  int get hashCode =>
+      id.hashCode ^
+      name.hashCode ^
+      displayName.hashCode ^
+      bestSellerDate.hashCode ^
+      updated.hashCode ^
+      books.hashCode;
 
   factory OverviewVO.fromJson(Map<String, dynamic> json) =>
       _$OverviewVOFromJson(json);
