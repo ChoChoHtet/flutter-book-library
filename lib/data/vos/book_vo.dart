@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 part 'book_vo.g.dart';
+
 @JsonSerializable()
 class BookVO {
   @JsonKey(name: "title")
@@ -35,20 +36,21 @@ class BookVO {
   @JsonKey(name: "rank")
   int? rank;
 
-  BookVO({
-    this.title,
-    this.author,
-    this.description,
-    this.publisher,
-    this.contributor,
-    this.bookImage,
-    this.bookWidth,
-    this.bookHeight,
-    this.createdDate,
-    this.updatedDate,
-    this.rank,
-  });
+  List<String>? categories;
 
+  BookVO(
+      {this.title,
+      this.author,
+      this.description,
+      this.publisher,
+      this.contributor,
+      this.bookImage,
+      this.bookWidth,
+      this.bookHeight,
+      this.createdDate,
+      this.updatedDate,
+      this.rank,
+      this.categories});
 
   @override
   bool operator ==(Object other) =>
@@ -65,7 +67,8 @@ class BookVO {
           bookHeight == other.bookHeight &&
           createdDate == other.createdDate &&
           updatedDate == other.updatedDate &&
-          rank == other.rank;
+          rank == other.rank &&
+          categories == other.categories;
 
   @override
   int get hashCode =>
@@ -79,7 +82,8 @@ class BookVO {
       bookHeight.hashCode ^
       createdDate.hashCode ^
       updatedDate.hashCode ^
-      rank.hashCode;
+      rank.hashCode ^
+      categories.hashCode;
 
   factory BookVO.fromJson(Map<String, dynamic> json) => _$BookVOFromJson(json);
 
