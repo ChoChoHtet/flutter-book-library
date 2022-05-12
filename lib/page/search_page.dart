@@ -2,8 +2,6 @@ import 'package:book_library/bloc/home_bloc.dart';
 import 'package:book_library/bloc/search_bloc.dart';
 import 'package:book_library/data/vos/book_vo.dart';
 import 'package:book_library/resource/dimen.dart';
-import 'package:book_library/resource/string.dart';
-import 'package:book_library/viewItems/item_book_view.dart';
 import 'package:book_library/viewItems/item_search_view.dart';
 import 'package:book_library/widgets/custom_search_view.dart';
 import 'package:book_library/widgets/horizontal_book_view.dart';
@@ -38,13 +36,13 @@ class _SearchPageState extends State<SearchPage> {
             return BookSearchView(
               onTextChanged: (query) {
                 if (query.isNotEmpty) {
-                  var searchBloc = Provider.of<SearchBloc>(context, listen: false);
+                  var searchBloc =
+                      Provider.of<SearchBloc>(context, listen: false);
                   searchBloc.getSearchSuggestion(query);
                 }
                 setState(() {
                   searchQuery = query;
                 });
-
               },
             );
           }),
@@ -68,13 +66,15 @@ class _SearchPageState extends State<SearchPage> {
                       itemBuilder: (context, index) {
                         return bloc.shouldShowResult
                             ? HorizontalBookView(
-                                title:
-                                    bloc.searchResultList.keys.toList()[index] ??
-                                        "",
-                                bookList:
-                                    bloc.searchResultList.values.toList()[index],
-                                onTapBook: () => debugPrint("On Tap Deatil"),
-                                onTapSeeMore: () => debugPrint("On Tap See more"))
+                                title: bloc.searchResultList.keys
+                                        .toList()[index] ??
+                                    "",
+                                bookList: bloc.searchResultList.values
+                                    .toList()[index],
+                                onTapBook: (title) =>
+                                    debugPrint("On Tap Deatil:$title"),
+                                onTapSeeMore: () =>
+                                    debugPrint("On Tap See more"))
                             : ItemSearchView(
                                 coverUrl:
                                     bloc.suggestionList[index].bookImage ?? "",
@@ -159,7 +159,9 @@ class BookSearchView extends StatelessWidget {
                 width: MediaQuery.of(context).size.width * 0.76,
                 child: TextField(
                   decoration: const InputDecoration(
-                      border: InputBorder.none, hintText: "Search Play Books"),
+                    border: InputBorder.none,
+                    hintText: "Search Play Books",
+                  ),
                   onChanged: (value) {
                     debugPrint("On Change was called: $value");
                     onTextChanged(value);

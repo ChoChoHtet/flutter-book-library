@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../data/vos/book_vo.dart';
 import '../resource/dimen.dart';
 import '../viewItems/item_grid_view.dart';
 import '../viewItems/item_list_view.dart';
@@ -10,11 +11,14 @@ class SortAndListMenuView extends StatelessWidget {
     Key? key,
     required this.sortByName,
     required this.listType,
+    required this.bookList,
     required this.onTapSortBy,
     required this.onTapList,
   }) : super(key: key);
+
   final String sortByName;
   final int listType;
+  final List<BookVO> bookList;
   final VoidCallback onTapSortBy;
   final VoidCallback onTapList;
 
@@ -29,7 +33,7 @@ class SortAndListMenuView extends StatelessWidget {
             sortByName: sortByName,
             onTapList: onTapList),
         const SizedBox(height: 29),
-        ListMenuSection(result: listType)
+        ListMenuSection(bookList: bookList, result: listType)
       ],
     );
   }
@@ -80,37 +84,50 @@ class SortByView extends StatelessWidget {
     );
   }
 }
+
 class ListMenuSection extends StatelessWidget {
   const ListMenuSection({
     Key? key,
+    required this.bookList,
     required int result,
   })  : _result = result,
         super(key: key);
 
   final int _result;
+  final List<BookVO> bookList;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: _result == 1
-            ? ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            separatorBuilder: (context, index) => const SizedBox(
-              height: 30,
+      child: _result == 1
+          ? ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              separatorBuilder: (context, index) => const SizedBox(
+                height: 30,
+              ),
+              itemCount: bookList.length,
+              itemBuilder: (context, index) => ItemListView(
+                imgPath: bookList[index].bookImage ?? "",
+                title: bookList[index].title ?? "",
+                author: bookList[index].author ?? "",
+              ),
+            )
+          : GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              itemCount: bookList.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: _result == 2 ? 2 : 3,
+                  childAspectRatio: _result == 2 ? 0.8 : 0.5,
+                  crossAxisSpacing: 10),
+              itemBuilder: (context, index) => ItemGridView(
+                imgPath: bookList[index].bookImage ?? "",
+                title: bookList[index].title ?? "",
+                author: bookList[index].author ?? "",
+              ),
             ),
-            itemCount: 12,
-            itemBuilder: (context, index) => const ItemListView())
-            : GridView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-            itemCount: 12,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: _result == 2 ? 2 : 3,
-              childAspectRatio: _result == 2 ? 0.8 : 0.5,
-              crossAxisSpacing: 10
-            ),
-            itemBuilder: (context, index) => const ItemGridView()));
+    );
   }
 }

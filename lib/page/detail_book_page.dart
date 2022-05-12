@@ -1,3 +1,5 @@
+import 'package:book_library/bloc/detail_book_bloc.dart';
+import 'package:book_library/data/vos/book_vo.dart';
 import 'package:book_library/page/detail_see_more_page.dart';
 import 'package:book_library/resource/dimen.dart';
 import 'package:book_library/widgets/horizontal_book_view.dart';
@@ -7,93 +9,96 @@ import 'package:book_library/widgets/title_with_see_more_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:provider/provider.dart';
 
 import '../resource/string.dart';
 import '../widgets/custom_vertical_divider.dart';
 
 class DetailBookPage extends StatelessWidget {
-  const DetailBookPage({Key? key}) : super(key: key);
+  const DetailBookPage({
+    Key? key,
+    required this.title,
+  }) : super(key: key);
+  final String title;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: NestedScrollView(
-        floatHeaderSlivers: true,
-        headerSliverBuilder: (context, innerBoxIsScrolled) => [
-          SliverAppBar(
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            floating: true,
-            leading: InkWell(
-              onTap: () => Navigator.pop(context),
-              child: const Icon(
-                Icons.arrow_back_ios,
-                size: normalIconSize,
-                color: Colors.black54,
+    return ChangeNotifierProvider(
+      create: (context) => DetailBookBloc(title),
+      child: Scaffold(
+        body: NestedScrollView(
+          floatHeaderSlivers: true,
+          headerSliverBuilder: (context, innerBoxIsScrolled) => [
+            SliverAppBar(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              floating: true,
+              leading: InkWell(
+                onTap: () => Navigator.pop(context),
+                child: const Icon(
+                  Icons.arrow_back_ios,
+                  size: normalIconSize,
+                  color: Colors.black54,
+                ),
+              ),
+              actions: const [
+                Icon(
+                  Icons.search_sharp,
+                  size: normalIconSize,
+                  color: Colors.black54,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: margin1X),
+                  child: Icon(
+                    Icons.bookmark_add,
+                    size: normalIconSize,
+                    color: Colors.black54,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: margin1X),
+                  child: Icon(
+                    Icons.more_vert,
+                    size: normalIconSize,
+                    color: Colors.black54,
+                  ),
+                )
+              ],
+            )
+          ],
+          body: Container(
+            padding: const EdgeInsets.symmetric(horizontal: paddingNormal),
+            child: Selector<DetailBookBloc,BookVO?>(
+              selector: (context,bloc) => bloc.bookItem,
+              builder: (context,bookItem,child) => ListView(
+                children:  [
+                  BookCoverAndTitleSection(
+                    title: bookItem?.title ?? "",
+                    author: bookItem?.author ?? "",
+                    publisher: bookItem?.publisher ?? "",
+                    imgPath:bookItem?.bookImage ?? imgUrl3,
+                  ),
+                  SizedBox(height: margin1X),
+                  BookRatingAndHourSection(),
+                  SizedBox(height: margin1X),
+                  PreviewAndBuyButtonView(),
+                  SizedBox(height: margin1X),
+                  SwitchToEbookButton(),
+                  Divider(thickness: 1),
+                  SizedBox(height: margin1X),
+                  AboutThisBookSection(description: bookItem?.description ?? "",),
+                  SizedBox(height: margin1X),
+                  RatingAndReviewSection(),
+                  SizedBox(height: margin1X),
+                 /* HorizontalBookView(
+                      title: title, bookList: bookList,
+                      onTapBook: onTapBook,
+                      onTapSeeMore: onTapSeeMore)
+                  SizedBox(height: margin1X),*/
+                  WriteReviewSection(),
+                  SizedBox(height: margin1X),
+                ],
               ),
             ),
-            actions: const [
-              Icon(
-                Icons.search_sharp,
-                size: normalIconSize,
-                color: Colors.black54,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: margin1X),
-                child: Icon(
-                  Icons.bookmark_add,
-                  size: normalIconSize,
-                  color: Colors.black54,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: margin1X),
-                child: Icon(
-                  Icons.more_vert,
-                  size: normalIconSize,
-                  color: Colors.black54,
-                ),
-              )
-            ],
-          )
-        ],
-        body: Container(
-          padding: const EdgeInsets.symmetric(horizontal: paddingNormal),
-          child: ListView(
-            children: [
-              const BookCoverAndTitleSection(),
-              const SizedBox(height: margin1X),
-              const BookRatingAndHourSection(),
-              const SizedBox(height: margin1X),
-              const PreviewAndBuyButtonView(),
-              const SizedBox(height: margin1X),
-              const SwitchToEbookButton(),
-              const Divider(thickness: 1),
-              const SizedBox(height: margin1X),
-              const AboutThisBookSection(),
-              const SizedBox(height: margin1X),
-              const RatingAndReviewSection(),
-              const SizedBox(height: margin1X),
-              /*HorizontalBookView(
-                title: "Continue the series",
-                imgPath: imgUrl3,
-                description: "Shadow Rider",
-                author: "John san",
-                onTapSeeMore: ()=> _navigateTSeeMoreScreen(context,"Continue the series"),
-                onTapBook: () => _navigateToBookDetailScreen(context),
-              ),
-              const SizedBox(height: margin1X),
-              HorizontalBookView(
-                title: "More by Christine Feehan",
-                imgPath: imgUrl3,
-                description: "Shadow Rider",
-                author: "John san",
-                onTapSeeMore: ()=> _navigateTSeeMoreScreen(context,"More by Christine Feehan"),
-                onTapBook: () => _navigateToBookDetailScreen(context),
-              ),*/
-              const SizedBox(height: margin1X),
-              const WriteReviewSection(),
-              const SizedBox(height: margin1X),
-            ],
           ),
         ),
       ),
@@ -113,12 +118,12 @@ class DetailBookPage extends StatelessWidget {
     );
   }
 
-  void _navigateToBookDetailScreen(BuildContext context) {
+  /*void _navigateToBookDetailScreen(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const DetailBookPage()),
     );
-  }
+  }*/
 }
 
 class WriteReviewSection extends StatelessWidget {
@@ -344,7 +349,9 @@ class RatingView extends StatelessWidget {
 class AboutThisBookSection extends StatelessWidget {
   const AboutThisBookSection({
     Key? key,
+    required this.description,
   }) : super(key: key);
+  final String description;
 
   @override
   Widget build(BuildContext context) {
@@ -355,9 +362,8 @@ class AboutThisBookSection extends StatelessWidget {
           onTapSeeMore: () => debugPrint("onTap see more"),
         ),
         const SizedBox(height: margin1X),
-        const TextWithMaxLineView(
-          text:
-              "it’s clear from the first page that Davis is going to serve a more intimate, unpolished account than is typical of the average (often ghost-written) celebrity memoir; Finding Me reads like Davis is sitting you down for a one-on-one conversation about her life, warts and all.Enjoy a great reading experience when you buy the Kindle edition of this book. Learn more about Great on Kindle, available in select categories.",
+        TextWithMaxLineView(
+          text:description,
         ),
       ],
     );
@@ -590,7 +596,16 @@ class RatingAndReviewView extends StatelessWidget {
 class BookCoverAndTitleSection extends StatelessWidget {
   const BookCoverAndTitleSection({
     Key? key,
+    required this.imgPath,
+    required this.title,
+    required this.author,
+    required this.publisher,
   }) : super(key: key);
+  final String imgPath;
+  final String title;
+  final String author;
+  final String publisher;
+
 
   @override
   Widget build(BuildContext context) {
@@ -603,7 +618,7 @@ class BookCoverAndTitleSection extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
             child: Image.network(
-              imgUrl2,
+              imgPath,
               width: 100,
               height: 100,
               fit: BoxFit.cover,
@@ -618,16 +633,16 @@ class BookCoverAndTitleSection extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
-                children: const [
+                children:  [
                   Text(
-                    "Finding me: A Memoir",
-                    style: TextStyle(
+                   title,
+                    style: const TextStyle(
                       fontSize: largeTextSize,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  NormalText(text: "Viola Davis"),
-                  NormalText(text: "Narrated by Viola Davis"),
+                  NormalText(text: author),
+                  NormalText(text: publisher),
                 ],
               ),
             ),

@@ -8,7 +8,7 @@ import '../viewItems/item_book_view.dart';
 class HorizontalBookView extends StatelessWidget {
   final String title;
   final List<BookVO> bookList;
-  final VoidCallback onTapBook;
+  final Function(String) onTapBook;
   final VoidCallback onTapSeeMore;
 
   const HorizontalBookView(
@@ -38,7 +38,9 @@ class HorizontalBookView extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               itemCount: bookList.length,
               itemBuilder: (builder, index) => InkWell(
-                    onTap: onTapBook,
+                    onTap: (){
+                      onTapBook(bookList[index].title ?? "");
+                    },
                     child: ItemBookView(
                       imgPath: bookList[index].bookImage ?? imgUrl3,
                       description: bookList[index].title ?? "",

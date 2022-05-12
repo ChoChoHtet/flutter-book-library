@@ -90,6 +90,7 @@ class _DetailShelvePageState extends State<DetailShelvePage> {
                   padding:
                       const EdgeInsets.only(bottom: 10, left: 16, right: 16),
                   child: SortAndListMenuView(
+                    bookList: [],
                     listType: _result,
                     sortByName: getSortTitle(selectedSortBy),
                     onTapSortBy: () {

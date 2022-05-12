@@ -3,7 +3,15 @@ import 'package:book_library/resource/string.dart';
 import 'package:flutter/material.dart';
 
 class ItemListView extends StatelessWidget {
-  const ItemListView({Key? key}) : super(key: key);
+  const ItemListView({Key? key,
+    required this.imgPath,
+    required this.title,
+    required this.author
+
+  }) : super(key: key);
+  final String imgPath;
+  final String title;
+  final String author;
 
   @override
   Widget build(BuildContext context) {
@@ -14,21 +22,32 @@ class ItemListView extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: Image.network(imgUrl3,width: 60,height: 100,fit: BoxFit.cover,),
+            child: Image.network(
+              imgPath.isNotEmpty ? imgPath : imgUrl3,
+              width: 60,
+              height: 100,
+              fit: BoxFit.cover,
+            ),
           ),
           const SizedBox(
             width: 20,
           ),
-          const SizedBox(
+           SizedBox(
             width: 200,
-            child: BookInfoSection(),
+            child: BookInfoSection(title: title,author: author,),
           ),
           const Spacer(),
           const Icon(
-            Icons.download_done_sharp,size: normalIconSize,),
-          const SizedBox(width: 30,),
+            Icons.download_done_sharp,
+            size: normalIconSize,
+          ),
+          const SizedBox(
+            width: 30,
+          ),
           const Icon(
-            Icons.more_horiz_rounded,size: normalIconSize,),
+            Icons.more_horiz_rounded,
+            size: normalIconSize,
+          ),
         ],
       ),
     );
@@ -38,7 +57,11 @@ class ItemListView extends StatelessWidget {
 class BookInfoSection extends StatelessWidget {
   const BookInfoSection({
     Key? key,
+    required this.title,
+    required this.author
   }) : super(key: key);
+  final String title;
+  final String author;
 
   @override
   Widget build(BuildContext context) {
@@ -46,30 +69,28 @@ class BookInfoSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
-      children:  const [
+      children:  [
         Flexible(
-          flex: 1,
+            flex: 1,
             child: Text(
-              "Never send a human to do a machine job",
-              style: TextStyle(
-                color: Colors.black87,
-                fontSize: 16,
-                fontWeight: FontWeight.w500
-              ),
-            )
-        ),
+             title,
+              style: const TextStyle(
+                  color: Colors.black87,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500),
+            )),
         Padding(
-          padding: EdgeInsets.only(top: 6),
+          padding: const EdgeInsets.only(top: 6),
           child: Text(
-            "Yong Zhao, Gaoming Zhang,Yong Zhao, Gaoming Zhang,Yong Zhao, Gaoming Zhang",
+           author,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.black87,
               fontSize: 14,
             ),
           ),
         ),
-        Text(
+        const Text(
           "Ebook . Sample",
           overflow: TextOverflow.ellipsis,
           style: TextStyle(

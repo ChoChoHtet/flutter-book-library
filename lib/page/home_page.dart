@@ -8,6 +8,7 @@ import 'package:book_library/resource/string.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../data/vos/book_vo.dart';
 import '../viewItems/play_book_item_view.dart';
 import '../widgets/normal_text.dart';
 import '../widgets/search_bar_view.dart';
@@ -20,15 +21,27 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
-  final List<String> booksList = [imgUrl, imgUrl, imgUrl];
+  // final List<String> booksList = [imgUrl, imgUrl, imgUrl];
 
   final List<String> tabList = ["Ebooks,Audiobooks"];
+  HomeBloc? homeBloc;
+
+  @override
+  void initState() {
+    homeBloc = HomeBloc();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     TabController _tabController = TabController(length: 2, vsync: this);
     return ChangeNotifierProvider(
-      create: (context) => HomeBloc(),
+      create: (context) => homeBloc,
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -51,18 +64,23 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     const SizedBox(
                       height: 30,
                     ),
-                    CarouselSlider.builder(
-                      itemCount: booksList.length,
-                      itemBuilder: (context, itemIndex, pageViewIndex) =>
-                          PlayBookItemView(
-                        onTapMenu: () => _showMenuList(context),
+                    Selector<HomeBloc, List<BookVO>>(
+                      selector: (context, bloc) => bloc.visitedBookList,
+                      builder: (context, bookList, child) =>
+                          CarouselSlider.builder(
+                        itemCount: bookList.length,
+                        itemBuilder: (context, itemIndex, pageViewIndex) =>
+                            PlayBookItemView(
+                          imgPath: bookList[itemIndex].bookImage ?? "",
+                          onTapMenu: () => _showMenuList(context),
+                        ),
+                        options: CarouselOptions(
+                            autoPlayCurve: Curves.fastOutSlowIn,
+                            enlargeCenterPage: true,
+                            enableInfiniteScroll: false,
+                            viewportFraction: 0.6,
+                            initialPage: 0),
                       ),
-                      options: CarouselOptions(
-                          autoPlayCurve: Curves.fastOutSlowIn,
-                          enlargeCenterPage: true,
-                          enableInfiniteScroll: false,
-                          viewportFraction: 0.6,
-                          initialPage: 0),
                     ),
                     const SizedBox(
                       height: 30,

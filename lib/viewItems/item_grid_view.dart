@@ -1,4 +1,3 @@
-import 'package:book_library/resource/color.dart';
 import 'package:book_library/resource/dimen.dart';
 import 'package:book_library/resource/string.dart';
 import 'package:book_library/widgets/custom_icon_view.dart';
@@ -6,7 +5,15 @@ import 'package:book_library/widgets/normal_text.dart';
 import 'package:flutter/material.dart';
 
 class ItemGridView extends StatelessWidget {
-  const ItemGridView({Key? key}) : super(key: key);
+  const ItemGridView({
+    Key? key,
+    required this.imgPath,
+    required this.title,
+    required this.author,
+  }) : super(key: key);
+  final String imgPath;
+  final String title;
+  final String author;
 
   @override
   Widget build(BuildContext context) {
@@ -15,18 +22,18 @@ class ItemGridView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const BookCoverSection(),
+          BookCoverSection(imgPath: imgPath,),
           SizedBox(
             width: MediaQuery.of(context).size.width * 0.325,
-            child: const NormalText(
-              text: "Never Send a human hello bla bla",
+            child: NormalText(
+              text: title,
               textSize: 14,
             ),
           ),
           SizedBox(
             width: MediaQuery.of(context).size.width * 0.325,
-            child: const NormalText(
-              text: "Yong Zhao , Gaomi",
+            child: NormalText(
+              text: author,
               textSize: 14,
             ),
           )
@@ -39,7 +46,9 @@ class ItemGridView extends StatelessWidget {
 class BookCoverSection extends StatelessWidget {
   const BookCoverSection({
     Key? key,
+    required this.imgPath,
   }) : super(key: key);
+  final String imgPath;
 
   @override
   Widget build(BuildContext context) {
@@ -49,8 +58,10 @@ class BookCoverSection extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 10, right: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        image: const DecorationImage(
-            image: NetworkImage(imgUrl3), fit: BoxFit.cover),
+        image:  DecorationImage(
+          image: NetworkImage(imgPath.isNotEmpty ? imgPath : imgUrl3),
+          fit: BoxFit.cover,
+        ),
       ),
       child: Stack(
         children: [

@@ -3,6 +3,77 @@
 part of 'book_vo.dart';
 
 // **************************************************************************
+// TypeAdapterGenerator
+// **************************************************************************
+
+class BookVOAdapter extends TypeAdapter<BookVO> {
+  @override
+  final int typeId = 1;
+
+  @override
+  BookVO read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return BookVO(
+      title: fields[0] as String?,
+      author: fields[1] as String?,
+      description: fields[2] as String?,
+      publisher: fields[3] as String?,
+      contributor: fields[4] as String?,
+      bookImage: fields[5] as String?,
+      bookWidth: fields[6] as int?,
+      bookHeight: fields[7] as int?,
+      createdDate: fields[8] as String?,
+      updatedDate: fields[9] as String?,
+      rank: fields[10] as int?,
+      categories: fields[11] as String?,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, BookVO obj) {
+    writer
+      ..writeByte(12)
+      ..writeByte(0)
+      ..write(obj.title)
+      ..writeByte(1)
+      ..write(obj.author)
+      ..writeByte(2)
+      ..write(obj.description)
+      ..writeByte(3)
+      ..write(obj.publisher)
+      ..writeByte(4)
+      ..write(obj.contributor)
+      ..writeByte(5)
+      ..write(obj.bookImage)
+      ..writeByte(6)
+      ..write(obj.bookWidth)
+      ..writeByte(7)
+      ..write(obj.bookHeight)
+      ..writeByte(8)
+      ..write(obj.createdDate)
+      ..writeByte(9)
+      ..write(obj.updatedDate)
+      ..writeByte(10)
+      ..write(obj.rank)
+      ..writeByte(11)
+      ..write(obj.categories);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BookVOAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+// **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 

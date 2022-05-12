@@ -30,7 +30,7 @@ class EBookPage extends StatelessWidget {
           return HorizontalBookView(
               title: overviewList[index].name ?? "",
               bookList: overviewList[index].books ?? [],
-              onTapBook: () => _navigateToBookDetailScreen(context),
+              onTapBook: (title) => _navigateToBookDetailScreen(context,title),
               onTapSeeMore: () => _navigateTSeeMoreScreen(
                   context, overviewList[index].name ?? "",
                   overviewList[index].bestSellerDate ?? "",
@@ -41,10 +41,10 @@ class EBookPage extends StatelessWidget {
     );
   }
 
-  void _navigateToBookDetailScreen(BuildContext context) {
+  void _navigateToBookDetailScreen(BuildContext context,String title) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const DetailBookPage()),
+      MaterialPageRoute(builder: (context) =>  DetailBookPage(title: title,)),
     );
   }
 
