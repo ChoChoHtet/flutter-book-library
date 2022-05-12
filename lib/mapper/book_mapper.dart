@@ -12,7 +12,7 @@ class BookMapper extends VOMapper<GoogleBookVO, BookVO> {
       publisher: object.volumeInfo?.publisher,
       createdDate: object.volumeInfo?.publishedDate,
       bookImage: object.volumeInfo?.imageLinks?.thumbnail,
-      categories: object.volumeInfo?.categories,
+      categories: object.volumeInfo?.categories?.first,
     );
   }
 }

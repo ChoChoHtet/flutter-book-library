@@ -18,9 +18,7 @@ BookVO _$BookVOFromJson(Map<String, dynamic> json) => BookVO(
       createdDate: json['created_date'] as String?,
       updatedDate: json['updated_date'] as String?,
       rank: json['rank'] as int?,
-      categories: (json['categories'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
+      categories: json['categories'] as String?,
     );
 
 Map<String, dynamic> _$BookVOToJson(BookVO instance) => <String, dynamic>{

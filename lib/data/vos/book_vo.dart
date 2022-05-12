@@ -36,7 +36,7 @@ class BookVO {
   @JsonKey(name: "rank")
   int? rank;
 
-  List<String>? categories;
+  String? categories;
 
   BookVO(
       {this.title,
@@ -51,6 +51,12 @@ class BookVO {
       this.updatedDate,
       this.rank,
       this.categories});
+
+
+  @override
+  String toString() {
+    return 'BookVO{title: $title, author: $author, publisher: $publisher, contributor: $contributor, bookImage: $bookImage, bookWidth: $bookWidth, bookHeight: $bookHeight, createdDate: $createdDate, updatedDate: $updatedDate, rank: $rank, categories: $categories}';
+  }
 
   @override
   bool operator ==(Object other) =>
