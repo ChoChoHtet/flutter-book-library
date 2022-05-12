@@ -4,9 +4,8 @@ import 'package:json_annotation/json_annotation.dart';
 part 'book_vo.g.dart';
 
 @JsonSerializable()
-@HiveType(typeId: kHiveBookID,adapterName: "BookVOAdapter")
+@HiveType(typeId: kHiveBookID, adapterName: "BookVOAdapter")
 class BookVO {
-  
   @JsonKey(name: "title")
   @HiveField(0)
   String? title;
@@ -54,24 +53,28 @@ class BookVO {
   @HiveField(11)
   String? categories;
 
-  BookVO(
-      {this.title,
-      this.author,
-      this.description,
-      this.publisher,
-      this.contributor,
-      this.bookImage,
-      this.bookWidth,
-      this.bookHeight,
-      this.createdDate,
-      this.updatedDate,
-      this.rank,
-      this.categories});
+  @HiveField(12)
+  int? visitedDateTime;
 
+  BookVO({
+    this.title,
+    this.author,
+    this.description,
+    this.publisher,
+    this.contributor,
+    this.bookImage,
+    this.bookWidth,
+    this.bookHeight,
+    this.createdDate,
+    this.updatedDate,
+    this.rank,
+    this.categories,
+    this.visitedDateTime,
+  });
 
   @override
   String toString() {
-    return 'BookVO{title: $title, author: $author, publisher: $publisher, contributor: $contributor, bookImage: $bookImage, bookWidth: $bookWidth, bookHeight: $bookHeight, createdDate: $createdDate, updatedDate: $updatedDate, rank: $rank, categories: $categories}';
+    return 'BookVO{title: $title, author: $author, description: $description, publisher: $publisher, contributor: $contributor, bookImage: $bookImage, bookWidth: $bookWidth, bookHeight: $bookHeight, createdDate: $createdDate, updatedDate: $updatedDate, rank: $rank, categories: $categories, visitedDateTime: $visitedDateTime}';
   }
 
   @override
@@ -90,7 +93,8 @@ class BookVO {
           createdDate == other.createdDate &&
           updatedDate == other.updatedDate &&
           rank == other.rank &&
-          categories == other.categories;
+          categories == other.categories &&
+          visitedDateTime == other.visitedDateTime;
 
   @override
   int get hashCode =>
@@ -105,7 +109,8 @@ class BookVO {
       createdDate.hashCode ^
       updatedDate.hashCode ^
       rank.hashCode ^
-      categories.hashCode;
+      categories.hashCode ^
+      visitedDateTime.hashCode;
 
   factory BookVO.fromJson(Map<String, dynamic> json) => _$BookVOFromJson(json);
 

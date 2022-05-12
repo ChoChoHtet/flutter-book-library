@@ -182,22 +182,25 @@ class _YourBookPageState extends State<YourBookPage> {
                 ),
                 Selector<LibraryBloc,List<BookVO>>(
                   selector: (context,bloc) => bloc.visitedBookList,
-                  builder:(context,visitedBookList,child) => SortAndListMenuView(
-                      bookList: visitedBookList,
-                      listType: _result,
-                      sortByName: getSortTitle(selectedSortBy),
-                      onTapSortBy: () {
-                        var sortByController = _showMenuSort(context);
-                        sortByController.then((value) {
-                          setState(() {});
+                  builder:(context,visitedBookList,child) {
+                    var libraryBloc = Provider.of<LibraryBloc>(context,listen: false);
+                    return SortAndListMenuView(
+                        bookList: visitedBookList,
+                        listType: _result,
+                        sortByName: getSortTitle(selectedSortBy),
+                        onTapSortBy: () {
+                          var sortByController = _showMenuSort(context);
+                          sortByController.then((value) {
+                           libraryBloc.sortBy(selectedSortBy);
+                          });
+                        },
+                        onTapList: () {
+                          var bottomSheetController = _showMenuList(context);
+                          bottomSheetController.then((value) {
+                            setState(() {});
+                          });
                         });
-                      },
-                      onTapList: () {
-                        var bottomSheetController = _showMenuList(context);
-                        bottomSheetController.then((value) {
-                          setState(() {});
-                        });
-                      }),
+                  },
                 ),
               ],
             ),
@@ -206,7 +209,6 @@ class _YourBookPageState extends State<YourBookPage> {
       ),
     );
   }
-
   String getSortTitle(int result) {
     var text = "";
     switch (result) {

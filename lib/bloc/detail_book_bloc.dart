@@ -15,7 +15,9 @@ class DetailBookBloc extends ChangeNotifier {
     _bookModel.getBookByTitleDB(title).then((value) {
       _bookVO = value;
       if (value != null) {
-        _bookModel.saveBookVisited(value);
+        var visited  = value;
+        visited.visitedDateTime = DateTime.now().millisecondsSinceEpoch;
+        _bookModel.saveBookVisited(visited);
       }
       notifyListeners();
     });

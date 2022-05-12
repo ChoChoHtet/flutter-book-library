@@ -22,18 +22,19 @@ class HomeBloc extends ChangeNotifier {
       safeNotifyListener();
     });
     _bookModel.getVisitedBookFromDB().listen((event) {
-      var reversedList = event.reversed;
-      _bookList = reversedList.toList();
+      event.sort((a, b) => a.visitedDateTime?.compareTo(b.visitedDateTime ?? -1) ?? 0);
+      _bookList = event.reversed.toList();
       safeNotifyListener();
     });
   }
-  void safeNotifyListener(){
-    if(!isDisposed){
+  void safeNotifyListener() {
+    if (!isDisposed) {
       notifyListeners();
     }
   }
-  void clearDisposeNotify(){
-    if(!isDisposed){
+
+  void clearDisposeNotify() {
+    if (!isDisposed) {
       isDisposed = true;
     }
   }
