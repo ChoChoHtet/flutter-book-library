@@ -11,15 +11,19 @@ class LibraryBloc extends ChangeNotifier {
 
   List<BookVO> _bookList = [];
   List<CategoryChipVO> _categoriesList = [];
+  List<BookVO> _bookTempList = [];
 
   bool isDisposed = false;
   List<BookVO> get visitedBookList => _bookList;
   List<CategoryChipVO> get categoryList => _categoriesList;
   bool isRefresh = false;
+  bool isShowClearChip = false;
+
 
   LibraryBloc() {
     _bookModel.getVisitedBookFromDB().listen((event) {
       _bookList = event;
+      _bookTempList = event;
       categoriesName(event);
       safeNotifyListener();
     }).onError((error) {
@@ -27,6 +31,7 @@ class LibraryBloc extends ChangeNotifier {
     });
   }
   void categoriesName(List<BookVO> bookList) {
+    isShowClearChip = false;
     List<CategoryChipVO> categories = [];
     for (var element in bookList) {
       // debugPrint("CategoriesName: ${element.categories}");
@@ -36,28 +41,53 @@ class LibraryBloc extends ChangeNotifier {
       }
     }
     _categoriesList = categories.toSet().toList();
-    debugPrint("CategoriesList:${_categoriesList.toString()}");
+    // debugPrint("CategoriesList:${_categoriesList.toString()}");
   }
 
   void onTapCategory(int curIndex) {
     List<CategoryChipVO> categories =
         _categoriesList.mapIndexed((index, element) {
       if (curIndex == index) {
-        // debugPrint("State change-> pre ${ element.isSelected}}");
         element.isSelected = !(element.isSelected ?? false);
-        //  debugPrint("State change-> post ${ element.isSelected}}");
       }
       return element;
     }).toList();
-
     categories.sort((a, b) => b.isSelected == true ? 1 : -1);
     _categoriesList = categories;
+    filterSelectedCategory(categories);
+    safeNotifyListener();
+  }
 
-    if (isRefresh == true) {
-      isRefresh = false;
-    } else {
-      isRefresh = true;
+  void filterSelectedCategory(List<CategoryChipVO> categoryList) async {
+    List<CategoryChipVO> selected =
+        categoryList.where((element) => element.isSelected == true).toList();
+    isShowClearChip = selected.isNotEmpty;
+    _bookList = await filterBooks(selected);
+  }
+
+  Future<List<BookVO>> filterBooks(List<CategoryChipVO> selected) {
+    List<BookVO> tempList = List.empty(growable: true);
+    for (var element in selected) {
+      for (var book in _bookTempList) {
+       // debugPrint("Book ${book.categories},element: ${element.name}");
+        if (book.categories == element.name) {
+          tempList.add(book);
+        }
+      }
     }
+    debugPrint("tempList: ${tempList.length},selected: ${selected.length}");
+    return Future.value(tempList);
+  }
+
+  void onTapClear() {
+    List<CategoryChipVO> categories =
+        _categoriesList.mapIndexed((index, element) {
+      element.isSelected = false;
+      return element;
+    }).toList();
+    _categoriesList = categories;
+    _bookList = _bookTempList;
+    isShowClearChip = false;
     safeNotifyListener();
   }
 

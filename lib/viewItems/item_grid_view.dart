@@ -10,34 +10,39 @@ class ItemGridView extends StatelessWidget {
     required this.imgPath,
     required this.title,
     required this.author,
+    required this.onTapBook,
   }) : super(key: key);
   final String imgPath;
   final String title;
   final String author;
+  final Function(String) onTapBook;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.35,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          BookCoverSection(imgPath: imgPath,),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.325,
-            child: NormalText(
-              text: title,
-              textSize: 14,
+      child: InkWell(
+        onTap: () => onTapBook(title),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            BookCoverSection(imgPath: imgPath,),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.325,
+              child: NormalText(
+                text: title,
+                textSize: 14,
+              ),
             ),
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.325,
-            child: NormalText(
-              text: author,
-              textSize: 14,
-            ),
-          )
-        ],
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.325,
+              child: NormalText(
+                text: author,
+                textSize: 14,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

@@ -16,22 +16,21 @@ class DetailBookBloc extends ChangeNotifier {
   DetailBookBloc(String title) {
     _bookModel.getBookByTitleDB(title).then((value) {
       _bookVO = value;
+      debugPrint("Category name: ${_bookVO?.categories}");
       if (value != null) {
         var visited = value;
         visited.visitedDateTime = DateTime.now().millisecondsSinceEpoch;
         _bookModel.saveBookVisited(visited);
-      }
-     // debugPrint("book categories: ${value?.categories}");
-      if (value != null && value.categories != null) {
-        _bookModel
-            .getBooksSeeMore(value.categories ?? "", "current", 0)
-            .then((value) {
-          _bookList = value;
-        }).onError((error, stackTrace) {
-          _bookList = [];
-        });
-      }
 
+        if ( value.categories != null) {
+          _bookModel.getBooksSeeMore(value.categories ?? "", "current", 0)
+              .then((value) {
+            _bookList = value;
+          }).onError((error, stackTrace) {
+            _bookList = [];
+          });
+        }
+      }
       safeNotifyListener();
     });
   }

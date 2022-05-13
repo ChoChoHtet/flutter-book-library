@@ -18,16 +18,17 @@ class BookModelImpl extends BookModel {
   final BookVisitedDao visitedDao = BookVisitedDaoImpl();
 
   @override
-  Future<List<OverviewVO>> getBooksOverview()  {
+  Future<List<OverviewVO>> getBooksOverview() {
     return _bookDataAgent.getBooksOverview().then((value) async {
       if (value.isNotEmpty) {
         for (var element in value) {
-         Future< List<BookVO>> books = Future.value( element.books?.map((e) {
-        //   debugPrint("categories: ${element.name}");
-           e.categories = element.name ?? "";
-           return e;
-         }).toList() ?? []);
-        _bookDao.saveBookList(await books);
+          Future<List<BookVO>> books = Future.value(element.books?.map((e) {
+                //   debugPrint("categories: ${element.name}");
+                e.categories = element.name ?? "General";
+                return e;
+              }).toList() ??
+              []);
+          _bookDao.saveBookList(await books);
         }
       }
       return Future.value(value);
@@ -39,9 +40,14 @@ class BookModelImpl extends BookModel {
       String listName, String bestSellerDate, int offset) {
     return _bookDataAgent
         .getBooksSeeMore(listName, bestSellerDate, offset)
-        .then((value) {
+        .then((value) async {
       if (value.isNotEmpty) {
-        _bookDao.saveBookList(value);
+        Future<List<BookVO>> books = Future.value(value.map((e) {
+              e.categories = listName;
+              return e;
+            }).toList() ??
+            []);
+        _bookDao.saveBookList(await books);
       }
       return Future.value(value);
     });

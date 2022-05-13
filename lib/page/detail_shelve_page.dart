@@ -5,6 +5,8 @@ import 'package:book_library/widgets/normal_text.dart';
 import 'package:book_library/widgets/sort_and_list_menu_view.dart';
 import 'package:flutter/material.dart';
 
+import 'detail_book_page.dart';
+
 class DetailShelvePage extends StatefulWidget {
   const DetailShelvePage({
     Key? key,
@@ -101,10 +103,13 @@ class _DetailShelvePageState extends State<DetailShelvePage> {
                     },
                     onTapList: () {
                       var bottomSheetController = _showMenuList(context);
-                      bottomSheetController.then((value) {
-                        setState(() {});
-                      });
+                      bottomSheetController.then(
+                        (value) {
+                          setState(() {});
+                        },
+                      );
                     },
+                    onTapBook: (title) => _navigateToBookDetailScreen(context, title),
                   ),
                 ),
               ],
@@ -130,6 +135,16 @@ class _DetailShelvePageState extends State<DetailShelvePage> {
         break;
     }
     return text;
+  }
+
+  void _navigateToBookDetailScreen(BuildContext context, String title) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => DetailBookPage(
+                title: title,
+              )),
+    );
   }
 
   _showShelveMenu(BuildContext context) => showModalBottomSheet(
@@ -355,10 +370,10 @@ class ShelfEditView extends StatelessWidget {
   final String shelfName;
   final Function(String) onTapDoneEdit;
 
-
   @override
   Widget build(BuildContext context) {
-    final TextEditingController _shelfName = TextEditingController(text: shelfName);
+    final TextEditingController _shelfName =
+        TextEditingController(text: shelfName);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: paddingNormal),
       child: Column(

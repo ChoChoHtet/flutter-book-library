@@ -1,10 +1,11 @@
 import 'package:book_library/bloc/library_bloc.dart';
-import 'package:book_library/data/vos/book_vo.dart';
 import 'package:book_library/data/vos/category_chip_vo.dart';
 import 'package:book_library/resource/dimen.dart';
 import 'package:book_library/widgets/sort_and_list_menu_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'detail_book_page.dart';
 
 class YourBookPage extends StatefulWidget {
   const YourBookPage({Key? key}) : super(key: key);
@@ -31,10 +32,7 @@ class _YourBookPageState extends State<YourBookPage> {
   @override
   void dispose() {
     super.dispose();
-    if (libraryBloc != null) {
-      libraryBloc?.clearDisposeNotify();
-      libraryBloc = null;
-    }
+    libraryBloc?.clearDisposeNotify();
   }
 
   @override
@@ -45,83 +43,78 @@ class _YourBookPageState extends State<YourBookPage> {
         body: Container(
           padding: const EdgeInsets.only(left: 16, top: 20),
           child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Selector<LibraryBloc, bool>(
-                  selector: (context, bloc) => bloc.isRefresh,
-                  builder: (context, categoryList, child) =>
-                      Selector<LibraryBloc, List<CategoryChipVO>>(
-                        selector: (context, bloc) => bloc.categoryList,
-                        builder: (context, categoryList, child) =>
-                            SizedBox(
-                              height: 50,
-                              child: ListView(
-                                scrollDirection: Axis.horizontal,
-                                children: [
-                                  SizedBox(
-                                    width: 50,
-                                    child: ClearChipView(
-                                        chipClose: chipClose,
-                                        onSelectChip: (value) {
-                                          setState(() {
-                                            chipClose = value;
-                                          });
-                                        }),
-                                  ),
-                                  const SizedBox(width: paddingNormal),
-                                  ListView.separated(
-                                    separatorBuilder: (context, index) =>
-                                    const SizedBox(width: paddingNormal),
-                                    scrollDirection: Axis.horizontal,
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount: categoryList.length,
-                                    itemBuilder: (context, index) => CategoryChipView(
-                                        category: categoryList[index],
-                                        onSelectCategoryChip: (value) {
-                                          libraryBloc?.onTapCategory(index);
-                                          //debugPrint("On Tap Chip");
-                                        }),
-                                  )
-                                ],
-                              ),
-                            ),
-                      ),
-                ),
-                const SizedBox(
-                  height: 29,
-                ),
-                Selector<LibraryBloc, List<BookVO>>(
-                  selector: (context, bloc) => bloc.visitedBookList,
-                  builder: (context, visitedBookList, child) {
-                    var libraryBloc =
-                        Provider.of<LibraryBloc>(context, listen: false);
-                    return SortAndListMenuView(
-                        bookList: visitedBookList,
-                        listType: _result,
-                        sortByName: getSortTitle(selectedSortBy),
-                        onTapSortBy: () {
-                          var sortByController = _showMenuSort(context);
-                          sortByController.then((value) {
-                            libraryBloc.sortBy(selectedSortBy);
-                          });
-                        },
-                        onTapList: () {
-                          var bottomSheetController = _showMenuList(context);
-                          bottomSheetController.then((value) {
-                            setState(() {});
-                          });
-                        });
-                  },
-                ),
-              ],
+            child: Consumer<LibraryBloc>(
+              builder: (context, bloc, child) => Column(
+                children: [
+                  SizedBox(
+                    height: 50,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        SizedBox(
+                          width: bloc.isShowClearChip ? 50 : 0,
+                          child: Visibility(
+                            visible: bloc.isShowClearChip,
+                            child: ClearChipView(
+                                chipClose: chipClose,
+                                onSelectChip: (value) {
+                                  bloc.onTapClear();
+                                }),
+                          ),
+                        ),
+                        const SizedBox(width: paddingNormal),
+                        ListView.separated(
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(width: paddingNormal),
+                          scrollDirection: Axis.horizontal,
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: bloc.categoryList.length,
+                          itemBuilder: (context, index) => CategoryChipView(
+                              category: bloc.categoryList[index],
+                              onSelectCategoryChip: (value) {
+                                bloc.onTapCategory(index);
+                                //debugPrint("On Tap Chip");
+                              }),
+                        )
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 29,
+                  ),
+                  SortAndListMenuView(
+                    bookList: bloc.visitedBookList,
+                    listType: _result,
+                    sortByName: getSortTitle(selectedSortBy),
+                    onTapSortBy: () {
+                      var sortByController = _showMenuSort(context);
+                      sortByController.then((value) {
+                        libraryBloc?.sortBy(selectedSortBy);
+                      });
+                    },
+                    onTapList: () {
+                      var bottomSheetController = _showMenuList(context);
+                      bottomSheetController.then((value) {
+                        setState(() {});
+                      });
+                    },
+                    onTapBook: (title) =>_navigateToBookDetailScreen(context, title),
+                  )
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
   }
-
+  void _navigateToBookDetailScreen(BuildContext context,String title) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) =>  DetailBookPage(title: title,)),
+    );
+  }
   String getSortTitle(int result) {
     var text = "";
     switch (result) {

@@ -6,49 +6,54 @@ class ItemListView extends StatelessWidget {
   const ItemListView({Key? key,
     required this.imgPath,
     required this.title,
-    required this.author
+    required this.author,
+    required this.onTapBook,
 
   }) : super(key: key);
   final String imgPath;
   final String title;
   final String author;
+  final Function(String) onTapBook;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(right: paddingNormal),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Image.network(
-              imgPath.isNotEmpty ? imgPath : imgUrl3,
-              width: 60,
-              height: 100,
-              fit: BoxFit.cover,
+      child: InkWell(
+        onTap: () => onTapBook(title),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.network(
+                imgPath.isNotEmpty ? imgPath : imgUrl3,
+                width: 60,
+                height: 100,
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-           SizedBox(
-            width: 200,
-            child: BookInfoSection(title: title,author: author,),
-          ),
-          const Spacer(),
-          const Icon(
-            Icons.download_done_sharp,
-            size: normalIconSize,
-          ),
-          const SizedBox(
-            width: 30,
-          ),
-          const Icon(
-            Icons.more_horiz_rounded,
-            size: normalIconSize,
-          ),
-        ],
+            const SizedBox(
+              width: 20,
+            ),
+             SizedBox(
+              width: 200,
+              child: BookInfoSection(title: title,author: author,),
+            ),
+            const Spacer(),
+            const Icon(
+              Icons.download_done_sharp,
+              size: normalIconSize,
+            ),
+            const SizedBox(
+              width: 30,
+            ),
+            const Icon(
+              Icons.more_horiz_rounded,
+              size: normalIconSize,
+            ),
+          ],
+        ),
       ),
     );
   }
