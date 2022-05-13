@@ -35,6 +35,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void dispose() {
     super.dispose();
+    homeBloc?.clearDisposeNotify();
   }
 
   @override

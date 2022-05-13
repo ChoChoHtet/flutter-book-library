@@ -1,13 +1,12 @@
-import 'package:book_library/bloc/home_bloc.dart';
 import 'package:book_library/bloc/search_bloc.dart';
 import 'package:book_library/data/vos/book_vo.dart';
 import 'package:book_library/resource/dimen.dart';
 import 'package:book_library/viewItems/item_search_view.dart';
-import 'package:book_library/widgets/custom_search_view.dart';
 import 'package:book_library/widgets/horizontal_book_view.dart';
-import 'package:book_library/widgets/search_bar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'detail_book_page.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -19,11 +18,23 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   List<BookVO> searchResultsList = List.empty();
   String searchQuery = "";
+  SearchBloc? searchBloc;
+
+  @override
+  void initState(){
+    super.initState();
+    searchBloc = SearchBloc();
+  }
+  @override
+  void dispose() {
+    super.dispose();
+    searchBloc?.clearDisposeNotify();
+  }
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => SearchBloc(),
+      create: (context) => searchBloc,
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -34,6 +45,13 @@ class _SearchPageState extends State<SearchPage> {
           titleSpacing: 0,
           title: Builder(builder: (context) {
             return BookSearchView(
+              onTextSubmitted: (query) {
+                if (query.isNotEmpty) {
+                  var searchBloc =
+                      Provider.of<SearchBloc>(context, listen: false);
+                  searchBloc.getSearchResultGroup(query);
+                }
+              },
               onTextChanged: (query) {
                 if (query.isNotEmpty) {
                   var searchBloc =
@@ -72,9 +90,10 @@ class _SearchPageState extends State<SearchPage> {
                                 bookList: bloc.searchResultList.values
                                     .toList()[index],
                                 onTapBook: (title) =>
-                                    debugPrint("On Tap Deatil:$title"),
+                                    _navigateToBookDetailScreen(context, title),
                                 onTapSeeMore: () =>
-                                    debugPrint("On Tap See more"))
+                                    debugPrint("On Tap See more"),
+                              )
                             : ItemSearchView(
                                 coverUrl:
                                     bloc.suggestionList[index].bookImage ?? "",
@@ -82,10 +101,7 @@ class _SearchPageState extends State<SearchPage> {
                                 author: bloc.suggestionList[index].author ?? "",
                                 onTapSuggestion: () {
                                   debugPrint("on Tap Search Item");
-                                  var searchBloc = Provider.of<SearchBloc>(
-                                      context,
-                                      listen: false);
-                                  searchBloc.getSearchResultGroup(
+                                  _navigateToBookDetailScreen(context,
                                       bloc.suggestionList[index].title ?? "");
                                 },
                               );
@@ -128,14 +144,26 @@ class _SearchPageState extends State<SearchPage> {
       ),
     );
   }
+
+  void _navigateToBookDetailScreen(BuildContext context, String title) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => DetailBookPage(
+                title: title,
+              )),
+    );
+  }
 }
 
 class BookSearchView extends StatelessWidget {
   const BookSearchView({
     Key? key,
     required this.onTextChanged,
+    required this.onTextSubmitted,
   }) : super(key: key);
   final Function(String) onTextChanged;
+  final Function(String) onTextSubmitted;
 
   @override
   Widget build(BuildContext context) {
@@ -158,10 +186,15 @@ class BookSearchView extends StatelessWidget {
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.76,
                 child: TextField(
+                  textInputAction: TextInputAction.search,
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     hintText: "Search Play Books",
                   ),
+                  onSubmitted: (value) {
+                    debugPrint("On Submitted was called: $value");
+                    onTextSubmitted(value);
+                  },
                   onChanged: (value) {
                     debugPrint("On Change was called: $value");
                     onTextChanged(value);

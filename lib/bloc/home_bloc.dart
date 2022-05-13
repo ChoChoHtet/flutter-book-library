@@ -17,10 +17,12 @@ class HomeBloc extends ChangeNotifier {
   bool isDisposed = false;
 
   HomeBloc() {
+
     _bookModel.getBooksOverview().then((value) {
       _overviewList = value;
       safeNotifyListener();
     });
+
     _bookModel.getVisitedBookFromDB().listen((event) {
       event.sort((a, b) => a.visitedDateTime?.compareTo(b.visitedDateTime ?? -1) ?? 0);
       _bookList = event.reversed.toList();

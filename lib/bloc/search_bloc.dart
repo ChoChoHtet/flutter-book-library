@@ -14,6 +14,7 @@ class SearchBloc extends ChangeNotifier {
   List<BookVO> _suggestionList = [];
 
   SearchBloc();
+  var isDisposed = false;
 
   void getSearchSuggestion(String query) {
     _model.getSearchSuggestions(query).then((value) {
@@ -24,7 +25,7 @@ class SearchBloc extends ChangeNotifier {
       _suggestionList = value;
       debugPrint("Suggestion list: ${_suggestionList.length}");
       shouldShowResult = false;
-      notifyListeners();
+      safeNotifyListener();
     });
   }
 
@@ -38,9 +39,18 @@ class SearchBloc extends ChangeNotifier {
       var groupData = groupBy(value, (BookVO obj) => obj.categories);
       _searchResultList = groupData;
       shouldShowResult = true;
-      debugPrint("_searchResultList key: ${_searchResultList.keys}");
-      debugPrint("_searchResultList key: ${_searchResultList.values}");
-      notifyListeners();
+     safeNotifyListener();
     });
+  }
+  void safeNotifyListener() {
+    if (!isDisposed) {
+      notifyListeners();
+    }
+  }
+
+  void clearDisposeNotify() {
+    if (!isDisposed) {
+      isDisposed = true;
+    }
   }
 }
