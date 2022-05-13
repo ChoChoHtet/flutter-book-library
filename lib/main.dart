@@ -1,19 +1,20 @@
-import 'dart:io';
+
 
 import 'package:book_library/data/vos/book_vo.dart';
-import 'package:book_library/page/home_page.dart';
+import 'package:book_library/data/vos/shelf_vo.dart';
 import 'package:book_library/page/main_page.dart';
 import 'package:book_library/persistence/hive_constant.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(BookVOAdapter());
+  Hive.registerAdapter(ShelfVOAdapter());
 
   await Hive.openBox<BookVO>(kBoxNameBookVO);
   await Hive.openBox<BookVO>(kBoxNameBookVisited);
+  await Hive.openBox<ShelfVO>(kBoxNameShelf);
 
   runApp(const MyApp());
 }

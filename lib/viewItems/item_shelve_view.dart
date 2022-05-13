@@ -4,7 +4,12 @@ import 'package:book_library/widgets/normal_text.dart';
 import 'package:flutter/material.dart';
 
 class ItemShelveView extends StatelessWidget {
-  const ItemShelveView({Key? key}) : super(key: key);
+  const ItemShelveView({Key? key,
+    required this.shelfName,
+    required this.bookNo,
+  }) : super(key: key);
+  final String shelfName;
+  final int bookNo;
 
   @override
   Widget build(BuildContext context) {
@@ -60,22 +65,22 @@ class ItemShelveView extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children:  [
                   Padding(
-                    padding: EdgeInsets.only(top: 10),
+                    padding: const EdgeInsets.only(top: 10),
                     child: Text(
-                      "10 International Design Books to Read",
-                      style: TextStyle(
+                     shelfName,
+                      style: const TextStyle(
                         color: Colors.black87,
                         fontSize: 18,
                       ),
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
                     child: Text(
-                      "3 books",
-                      style: TextStyle(
+                      "$bookNo book(s)",
+                      style: const TextStyle(
                         color: Colors.black87,
                         fontSize: 14,
                       ),
