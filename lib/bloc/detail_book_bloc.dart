@@ -5,11 +5,13 @@ import 'package:flutter/foundation.dart';
 
 class DetailBookBloc extends ChangeNotifier {
   final BookModel _bookModel = BookModelImpl();
+
   BookVO? get bookItem => _bookVO;
   List<BookVO> get bookList => _bookList;
 
   BookVO? _bookVO;
   List<BookVO> _bookList = [];
+  bool isDisposed = false;
 
   DetailBookBloc(String title) {
     _bookModel.getBookByTitleDB(title).then((value) {
@@ -19,7 +21,7 @@ class DetailBookBloc extends ChangeNotifier {
         visited.visitedDateTime = DateTime.now().millisecondsSinceEpoch;
         _bookModel.saveBookVisited(visited);
       }
-      debugPrint("book categories: ${value?.categories}");
+     // debugPrint("book categories: ${value?.categories}");
       if (value != null && value.categories != null) {
         _bookModel
             .getBooksSeeMore(value.categories ?? "", "current", 0)
@@ -30,7 +32,19 @@ class DetailBookBloc extends ChangeNotifier {
         });
       }
 
-      notifyListeners();
+      safeNotifyListener();
     });
+  }
+
+  void safeNotifyListener() {
+    if (!isDisposed) {
+      notifyListeners();
+    }
+  }
+
+  void clearDisposeNotify() {
+    if (!isDisposed) {
+      isDisposed = true;
+    }
   }
 }

@@ -23,7 +23,7 @@ class BookModelImpl extends BookModel {
       if (value.isNotEmpty) {
         for (var element in value) {
          Future< List<BookVO>> books = Future.value( element.books?.map((e) {
-           debugPrint("categories: ${element.name}");
+        //   debugPrint("categories: ${element.name}");
            e.categories = element.name ?? "";
            return e;
          }).toList() ?? []);

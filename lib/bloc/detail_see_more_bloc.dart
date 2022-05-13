@@ -3,13 +3,11 @@ import 'package:flutter/foundation.dart';
 
 import '../data/model/book_model.dart';
 import '../data/model/impl/book_model_impl.dart';
-import '../data/vos/overview_vo.dart';
 
 class DetailSeeMoreBloc extends ChangeNotifier {
   final BookModel _bookModel = BookModelImpl();
 
   List<BookVO> get bookList => _bookList;
-
   List<BookVO> _bookList = [];
   bool isDisposed = false;
 

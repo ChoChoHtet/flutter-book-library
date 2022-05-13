@@ -1,6 +1,5 @@
 import 'package:book_library/bloc/detail_book_bloc.dart';
 import 'package:book_library/data/vos/book_vo.dart';
-import 'package:book_library/page/detail_see_more_page.dart';
 import 'package:book_library/resource/dimen.dart';
 import 'package:book_library/widgets/horizontal_book_view.dart';
 import 'package:book_library/widgets/normal_text.dart';
@@ -14,7 +13,7 @@ import 'package:provider/provider.dart';
 import '../resource/string.dart';
 import '../widgets/custom_vertical_divider.dart';
 
-class DetailBookPage extends StatelessWidget {
+class DetailBookPage extends StatefulWidget {
   const DetailBookPage({
     Key? key,
     required this.title,
@@ -22,9 +21,30 @@ class DetailBookPage extends StatelessWidget {
   final String title;
 
   @override
+  State<DetailBookPage> createState() => _DetailBookPageState();
+}
+
+class _DetailBookPageState extends State<DetailBookPage> {
+  DetailBookBloc? detailBookBloc;
+  @override
+  void initState() {
+    super.initState();
+    detailBookBloc = DetailBookBloc(widget.title);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    if (detailBookBloc != null) {
+      detailBookBloc?.clearDisposeNotify();
+      detailBookBloc = null;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => DetailBookBloc(title),
+      create: (context) => detailBookBloc,
       child: Scaffold(
         body: NestedScrollView(
           floatHeaderSlivers: true,
@@ -94,14 +114,15 @@ class DetailBookPage extends StatelessWidget {
                   Selector<DetailBookBloc, List<BookVO>>(
                       selector: (context, bloc) => bloc.bookList,
                       builder: (context, bookList, child) => Visibility(
-                        visible: bookList.isNotEmpty,
-                        child: HorizontalBookView(
-                            title: " Similar EBook",
-                            bookList: bookList,
-                            onTapBook: (title) =>
-                                _navigateToBookDetailScreen(context, title),
-                            onTapSeeMore: () => debugPrint("On Tap See More")),
-                      )),
+                            visible: bookList.isNotEmpty,
+                            child: HorizontalBookView(
+                                title: " Similar EBook",
+                                bookList: bookList,
+                                onTapBook: (title) =>
+                                    _navigateToBookDetailScreen(context, title),
+                                onTapSeeMore: () =>
+                                    debugPrint("On Tap See More")),
+                          )),
                   const SizedBox(height: margin1X),
                   const WriteReviewSection(),
                   const SizedBox(height: margin1X),
@@ -113,7 +134,6 @@ class DetailBookPage extends StatelessWidget {
       ),
     );
   }
-
 
   void _navigateToBookDetailScreen(BuildContext context, String title) {
     Navigator.push(

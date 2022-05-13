@@ -1,7 +1,7 @@
 import 'package:book_library/bloc/library_bloc.dart';
 import 'package:book_library/data/vos/book_vo.dart';
+import 'package:book_library/data/vos/category_chip_vo.dart';
 import 'package:book_library/resource/dimen.dart';
-import 'package:book_library/widgets/custom_vertical_divider.dart';
 import 'package:book_library/widgets/sort_and_list_menu_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +14,7 @@ class YourBookPage extends StatefulWidget {
 }
 
 class _YourBookPageState extends State<YourBookPage> {
+  LibraryBloc? libraryBloc;
   bool chipBook = false;
   bool chipDownload = false;
   bool chipPurchase = false;
@@ -22,168 +23,79 @@ class _YourBookPageState extends State<YourBookPage> {
   int selectedSortBy = 1;
 
   @override
+  void initState() {
+    super.initState();
+    libraryBloc = LibraryBloc();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    if (libraryBloc != null) {
+      libraryBloc?.clearDisposeNotify();
+      libraryBloc = null;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => LibraryBloc(),
+      create: (context) => libraryBloc,
       child: Scaffold(
         body: Container(
           padding: const EdgeInsets.only(left: 16, top: 20),
           child: SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(
-                  height: 50,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      SizedBox(
-                        width: 50,
-                        child: ChoiceChip(
-                          label: Icon(
-                            Icons.close,
-                            color: chipClose ? Colors.white : Colors.black87,
-                          ),
-                          backgroundColor: Colors.white,
-                          labelPadding: const EdgeInsets.symmetric(
-                              vertical: 6, horizontal: 7),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25),
-                            side: BorderSide(
-                                color: Colors.black12,
-                                width: chipClose ? 0 : 1),
-                          ),
-                          selected: chipClose,
-                          selectedColor: Colors.blueAccent,
-                          onSelected: (select) {
-                            setState(() {
-                              chipClose = !chipClose;
-                              chipBook = false;
-                              chipPurchase = false;
-                              chipDownload = false;
-                            });
-                          },
-                        ),
-                      ),
-                      const SizedBox(
-                        width: paddingNormal,
-                      ),
-                      ChoiceChip(
-                        label: Text(
-                          "Ebooks",
-                          style: TextStyle(
-                            color: chipBook ? Colors.white : Colors.black87,
-                          ),
-                        ),
-                        labelPadding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 4),
-                        backgroundColor: Colors.white,
-                        selected: chipBook,
-                        selectedColor: Colors.blueAccent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          side: BorderSide(
-                              color: Colors.black12, width: chipBook ? 0 : 1),
-                        ),
-                        onSelected: (select) {
-                          setState(() {
-                            chipBook = !chipBook;
-                            chipClose = false;
-                          });
-                        },
-                      ),
-                      const SizedBox(
-                        width: paddingNormal,
-                      ),
-                      ChoiceChip(
-                        label: SizedBox(
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 10),
-                                child: Text(
-                                  "Purchases",
-                                  style: TextStyle(
-                                      color: chipPurchase
-                                          ? Colors.white
-                                          : Colors.black87),
-                                ),
+                Selector<LibraryBloc, bool>(
+                  selector: (context, bloc) => bloc.isRefresh,
+                  builder: (context, categoryList, child) =>
+                      Selector<LibraryBloc, List<CategoryChipVO>>(
+                        selector: (context, bloc) => bloc.categoryList,
+                        builder: (context, categoryList, child) =>
+                            SizedBox(
+                              height: 50,
+                              child: ListView(
+                                scrollDirection: Axis.horizontal,
+                                children: [
+                                  SizedBox(
+                                    width: 50,
+                                    child: ClearChipView(
+                                        chipClose: chipClose,
+                                        onSelectChip: (value) {
+                                          setState(() {
+                                            chipClose = value;
+                                          });
+                                        }),
+                                  ),
+                                  const SizedBox(width: paddingNormal),
+                                  ListView.separated(
+                                    separatorBuilder: (context, index) =>
+                                    const SizedBox(width: paddingNormal),
+                                    scrollDirection: Axis.horizontal,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount: categoryList.length,
+                                    itemBuilder: (context, index) => CategoryChipView(
+                                        category: categoryList[index],
+                                        onSelectCategoryChip: (value) {
+                                          libraryBloc?.onTapCategory(index);
+                                          //debugPrint("On Tap Chip");
+                                        }),
+                                  )
+                                ],
                               ),
-                              CustomVerticalDivider(
-                                height: 18,
-                                color: chipPurchase
-                                    ? Colors.white
-                                    : Colors.black87,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: Text(
-                                  "Samples",
-                                  style: TextStyle(
-                                      color: chipPurchase
-                                          ? Colors.white
-                                          : Colors.black87),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        backgroundColor: Colors.white,
-                        labelPadding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 4),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          side: BorderSide(
-                              color: Colors.black12,
-                              width: chipPurchase ? 0 : 1),
-                        ),
-                        selected: chipPurchase,
-                        selectedColor: Colors.blueAccent,
-                        onSelected: (select) {
-                          setState(() {
-                            chipPurchase = !chipPurchase;
-                            chipClose = false;
-                          });
-                        },
+                            ),
                       ),
-                      const SizedBox(
-                        width: paddingNormal,
-                      ),
-                      ChoiceChip(
-                        label: Text(
-                          "Download",
-                          style: TextStyle(
-                              color:
-                                  chipDownload ? Colors.white : Colors.black87),
-                        ),
-                        labelPadding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 4),
-                        backgroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          side: BorderSide(
-                              color: Colors.black12,
-                              width: chipDownload ? 0 : 1),
-                        ),
-                        selected: chipDownload,
-                        selectedColor: Colors.blueAccent,
-                        onSelected: (select) {
-                          setState(() {
-                            chipDownload = !chipDownload;
-                            chipClose = false;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
                 ),
                 const SizedBox(
                   height: 29,
                 ),
-                Selector<LibraryBloc,List<BookVO>>(
-                  selector: (context,bloc) => bloc.visitedBookList,
-                  builder:(context,visitedBookList,child) {
-                    var libraryBloc = Provider.of<LibraryBloc>(context,listen: false);
+                Selector<LibraryBloc, List<BookVO>>(
+                  selector: (context, bloc) => bloc.visitedBookList,
+                  builder: (context, visitedBookList, child) {
+                    var libraryBloc =
+                        Provider.of<LibraryBloc>(context, listen: false);
                     return SortAndListMenuView(
                         bookList: visitedBookList,
                         listType: _result,
@@ -191,7 +103,7 @@ class _YourBookPageState extends State<YourBookPage> {
                         onTapSortBy: () {
                           var sortByController = _showMenuSort(context);
                           sortByController.then((value) {
-                           libraryBloc.sortBy(selectedSortBy);
+                            libraryBloc.sortBy(selectedSortBy);
                           });
                         },
                         onTapList: () {
@@ -209,6 +121,7 @@ class _YourBookPageState extends State<YourBookPage> {
       ),
     );
   }
+
   String getSortTitle(int result) {
     var text = "";
     switch (result) {
@@ -368,4 +281,79 @@ class _YourBookPageState extends State<YourBookPage> {
           );
         }),
       );
+}
+
+class ClearChipView extends StatelessWidget {
+  const ClearChipView({
+    Key? key,
+    required this.chipClose,
+    required this.onSelectChip,
+  }) : super(key: key);
+  final bool chipClose;
+  final Function(bool) onSelectChip;
+
+  @override
+  Widget build(BuildContext context) {
+    return ChoiceChip(
+      label: Icon(
+        Icons.close,
+        color: chipClose ? Colors.white : Colors.black87,
+      ),
+      backgroundColor: Colors.white,
+      labelPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 7),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(25),
+        side: BorderSide(color: Colors.black12, width: chipClose ? 0 : 1),
+      ),
+      selected: chipClose,
+      selectedColor: Colors.blueAccent,
+      onSelected: (select) {
+        /* setState(() {
+          chipClose = !chipClose;
+          chipBook = false;
+          chipPurchase = false;
+          chipDownload = false;
+        });*/
+        onSelectChip(!chipClose);
+      },
+    );
+  }
+}
+
+class CategoryChipView extends StatelessWidget {
+  const CategoryChipView({
+    Key? key,
+    required this.category,
+    required this.onSelectCategoryChip,
+  }) : super(key: key);
+  final CategoryChipVO category;
+  final Function(bool) onSelectCategoryChip;
+
+  @override
+  Widget build(BuildContext context) {
+    return ChoiceChip(
+      label: Text(
+        category.name ?? "",
+        style: TextStyle(
+          color: category.isSelected ?? false ? Colors.white : Colors.black87,
+        ),
+      ),
+      labelPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      backgroundColor: Colors.white,
+      selected: category.isSelected ?? false,
+      selectedColor: Colors.blueAccent,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: BorderSide(
+            color: Colors.black12, width: category.isSelected ?? false ? 0 : 1),
+      ),
+      onSelected: (select) {
+        /* setState(() {
+         chipBook = !chipBook;
+         chipClose = false;
+       });*/
+        onSelectCategoryChip(!(category.isSelected ?? false));
+      },
+    );
+  }
 }
