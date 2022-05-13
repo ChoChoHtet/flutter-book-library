@@ -37,16 +37,12 @@ class HorizontalBookView extends StatelessWidget {
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: bookList.length,
-              itemBuilder: (builder, index) => InkWell(
-                    onTap: (){
-                      onTapBook(bookList[index].title ?? "");
-                    },
-                    child: ItemBookView(
-                      imgPath: bookList[index].bookImage ?? imgUrl3,
-                      description: bookList[index].title ?? "",
-                      author: bookList[index].author ?? "",
-                    ),
-                  )),
+              itemBuilder: (builder, index) => ItemBookView(
+                imgPath: bookList[index].bookImage ?? imgUrl3,
+                description: bookList[index].title ?? "",
+                author: bookList[index].author ?? "",
+                onTapBook: (title ) => onTapBook(title),
+              ),),
         )
       ],
     );

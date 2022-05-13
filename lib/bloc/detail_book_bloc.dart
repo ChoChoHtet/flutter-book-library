@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 class DetailBookBloc extends ChangeNotifier {
   final BookModel _bookModel = BookModelImpl();
   BookVO? get bookItem => _bookVO;
-  List<BookVO?> get bookList => _bookList;
+  List<BookVO> get bookList => _bookList;
 
   BookVO? _bookVO;
   List<BookVO> _bookList = [];
@@ -15,10 +15,21 @@ class DetailBookBloc extends ChangeNotifier {
     _bookModel.getBookByTitleDB(title).then((value) {
       _bookVO = value;
       if (value != null) {
-        var visited  = value;
+        var visited = value;
         visited.visitedDateTime = DateTime.now().millisecondsSinceEpoch;
         _bookModel.saveBookVisited(visited);
       }
+      debugPrint("book categories: ${value?.categories}");
+      if (value != null && value.categories != null) {
+        _bookModel
+            .getBooksSeeMore(value.categories ?? "", "current", 0)
+            .then((value) {
+          _bookList = value;
+        }).onError((error, stackTrace) {
+          _bookList = [];
+        });
+      }
+
       notifyListeners();
     });
   }

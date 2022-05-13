@@ -11,10 +11,24 @@ class DetailSeeMoreBloc extends ChangeNotifier {
   List<BookVO> get bookList => _bookList;
 
   List<BookVO> _bookList = [];
+  bool isDisposed = false;
+
   DetailSeeMoreBloc(String listName, String bestSellerDate, int offset) {
-    _bookModel.getBooksSeeMore(listName, bestSellerDate, offset).then((value) {
+    _bookModel.getBooksSeeMore(listName, bestSellerDate, offset)
+        .then((value) {
      _bookList = value;
-      notifyListeners();
+      safeNotifyListener();
     });
+  }
+  void safeNotifyListener() {
+    if (!isDisposed) {
+      notifyListeners();
+    }
+  }
+
+  void clearDisposeNotify() {
+    if (!isDisposed) {
+      isDisposed = true;
+    }
   }
 }

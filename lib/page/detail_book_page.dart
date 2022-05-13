@@ -67,35 +67,44 @@ class DetailBookPage extends StatelessWidget {
           ],
           body: Container(
             padding: const EdgeInsets.symmetric(horizontal: paddingNormal),
-            child: Selector<DetailBookBloc,BookVO?>(
-              selector: (context,bloc) => bloc.bookItem,
-              builder: (context,bookItem,child) => ListView(
-                children:  [
+            child: Selector<DetailBookBloc, BookVO?>(
+              selector: (context, bloc) => bloc.bookItem,
+              builder: (context, bookItem, child) => ListView(
+                children: [
                   BookCoverAndTitleSection(
                     title: bookItem?.title ?? "",
                     author: bookItem?.author ?? "",
                     publisher: bookItem?.publisher ?? "",
-                    imgPath:bookItem?.bookImage ?? imgUrl3,
+                    imgPath: bookItem?.bookImage ?? imgUrl3,
                   ),
-                  SizedBox(height: margin1X),
-                  BookRatingAndHourSection(),
-                  SizedBox(height: margin1X),
-                  PreviewAndBuyButtonView(),
-                  SizedBox(height: margin1X),
-                  SwitchToEbookButton(),
-                  Divider(thickness: 1),
-                  SizedBox(height: margin1X),
-                  AboutThisBookSection(description: bookItem?.description ?? "",),
-                  SizedBox(height: margin1X),
-                  RatingAndReviewSection(),
-                  SizedBox(height: margin1X),
-                 /* HorizontalBookView(
-                      title: title, bookList: bookList,
-                      onTapBook: onTapBook,
-                      onTapSeeMore: onTapSeeMore)
-                  SizedBox(height: margin1X),*/
-                  WriteReviewSection(),
-                  SizedBox(height: margin1X),
+                  const SizedBox(height: margin1X),
+                  const BookRatingAndHourSection(),
+                  const SizedBox(height: margin1X),
+                  const PreviewAndBuyButtonView(),
+                  const SizedBox(height: margin1X),
+                  const SwitchToEbookButton(),
+                  const Divider(thickness: 1),
+                  const SizedBox(height: margin1X),
+                  AboutThisBookSection(
+                    description: bookItem?.description ?? "",
+                  ),
+                  const SizedBox(height: margin1X),
+                  const RatingAndReviewSection(),
+                  const SizedBox(height: margin1X),
+                  Selector<DetailBookBloc, List<BookVO>>(
+                      selector: (context, bloc) => bloc.bookList,
+                      builder: (context, bookList, child) => Visibility(
+                        visible: bookList.isNotEmpty,
+                        child: HorizontalBookView(
+                            title: " Similar EBook",
+                            bookList: bookList,
+                            onTapBook: (title) =>
+                                _navigateToBookDetailScreen(context, title),
+                            onTapSeeMore: () => debugPrint("On Tap See More")),
+                      )),
+                  const SizedBox(height: margin1X),
+                  const WriteReviewSection(),
+                  const SizedBox(height: margin1X),
                 ],
               ),
             ),
@@ -105,25 +114,16 @@ class DetailBookPage extends StatelessWidget {
     );
   }
 
-  void _navigateTSeeMoreScreen(
-      BuildContext context, String title, String date, int offset) {
+
+  void _navigateToBookDetailScreen(BuildContext context, String title) {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => DetailSeeMorePage(
+          builder: (context) => DetailBookPage(
                 title: title,
-                date: date,
-                offset: offset,
               )),
     );
   }
-
-  /*void _navigateToBookDetailScreen(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const DetailBookPage()),
-    );
-  }*/
 }
 
 class WriteReviewSection extends StatelessWidget {
@@ -363,7 +363,7 @@ class AboutThisBookSection extends StatelessWidget {
         ),
         const SizedBox(height: margin1X),
         TextWithMaxLineView(
-          text:description,
+          text: description,
         ),
       ],
     );
@@ -606,7 +606,6 @@ class BookCoverAndTitleSection extends StatelessWidget {
   final String author;
   final String publisher;
 
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -633,9 +632,9 @@ class BookCoverAndTitleSection extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
-                children:  [
+                children: [
                   Text(
-                   title,
+                    title,
                     style: const TextStyle(
                       fontSize: largeTextSize,
                       fontWeight: FontWeight.w500,
