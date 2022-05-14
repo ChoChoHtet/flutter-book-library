@@ -12,6 +12,7 @@ import '../data/vos/book_vo.dart';
 import '../viewItems/play_book_item_view.dart';
 import '../widgets/normal_text.dart';
 import '../widgets/search_bar_view.dart';
+import 'add_shelf_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -67,20 +68,25 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     ),
                     Selector<HomeBloc, List<BookVO>>(
                       selector: (context, bloc) => bloc.visitedBookList,
-                      builder: (context, bookList, child) =>
-                          CarouselSlider.builder(
-                        itemCount: bookList.length,
-                        itemBuilder: (context, itemIndex, pageViewIndex) =>
-                            PlayBookItemView(
-                          imgPath: bookList[itemIndex].bookImage ?? "",
-                          onTapMenu: () => _showMenuList(context),
+                      builder: (context, bookList, child) => Visibility(
+                        visible: bookList.isNotEmpty,
+                        child: CarouselSlider.builder(
+                          itemCount: bookList.length,
+                          itemBuilder: (context, itemIndex, pageViewIndex) =>
+                              PlayBookItemView(
+                            imgPath: bookList[itemIndex].bookImage ?? "",
+                            onTapMenu: () => _showMenuList(
+                                context,
+                                bookList[itemIndex].title ?? "",
+                                bookList[itemIndex].bookImage ?? ""),
+                          ),
+                          options: CarouselOptions(
+                              autoPlayCurve: Curves.fastOutSlowIn,
+                              enlargeCenterPage: true,
+                              enableInfiniteScroll: false,
+                              viewportFraction: 0.6,
+                              initialPage: 0),
                         ),
-                        options: CarouselOptions(
-                            autoPlayCurve: Curves.fastOutSlowIn,
-                            enlargeCenterPage: true,
-                            enableInfiniteScroll: false,
-                            viewportFraction: 0.6,
-                            initialPage: 0),
                       ),
                     ),
                     const SizedBox(
@@ -114,11 +120,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           },
           body: TabBarView(controller: _tabController, children: [
             Selector<HomeBloc, List<OverviewVO>>(
-              selector: (context, bloc) => bloc.overviewList,
-              builder: (context, overviewList, child) => EBookPage(
-                overviewList: overviewList,
-              ),
-            ),
+                selector: (context, bloc) => bloc.overviewList,
+                builder: (context, overviewList, child) =>
+                    overviewList.isNotEmpty
+                        ? EBookPage(
+                            overviewList: overviewList,
+                            onTapMenu: (title, imgPath) =>
+                                _showMenuList(context, title, imgPath),
+                          )
+                        : const Center(
+                            child: CircularProgressIndicator(),
+                          )),
             const AudioBookPage(),
           ]),
         ),
@@ -133,12 +145,25 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  void _onTapMenuItem(String action) {
-    //ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("onTap Menu")),);
-    debugPrint("on Tap Menu: $action");
+  void _navigateTAddShelfScreen(BuildContext context, String title) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => AddShelfPage(
+                bookTitle: title,
+              )),
+    );
   }
 
-  void _showMenuList(BuildContext context) {
+  void _onTapMenuItem(String action, {String bookTitle = ""}) {
+    //ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("onTap Menu")),);
+    debugPrint("on Tap Menu: $action");
+    if (action == menuAddToShelf) {
+      _navigateTAddShelfScreen(context, bookTitle);
+    }
+  }
+
+  void _showMenuList(BuildContext context, String title, String imgPath) {
     showModalBottomSheet(
         context: context,
         builder: (context) => SizedBox(
@@ -158,7 +183,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             width: 70,
                             height: 100,
                             child: Image.network(
-                              imgUrl3,
+                              imgPath,
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -166,14 +191,20 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         const SizedBox(
                           width: paddingNormal,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              NormalText(text: "The making of a manager"),
-                              NormalText(text: "Writer"),
-                            ],
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children:  [
+                                Text(
+                                  title,
+                                  style:
+                                  const TextStyle(fontSize: mediumTextSize),
+                                ),
+                                const NormalText(text: "Writer"),
+                              ],
+                            ),
                           ),
                         ),
                       ],
@@ -201,7 +232,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         title: const NormalText(
                           text: menuAddToShelf,
                         ),
-                        onTap: () => _onTapMenuItem(menuAddToShelf),
+                        onTap: () {
+                          Navigator.pop(context);
+                          _onTapMenuItem(menuAddToShelf, bookTitle: title);
+                        },
                       ),
                       ListTile(
                         leading: const Icon(Icons.book),

@@ -13,9 +13,11 @@ class ShelfBloc extends ChangeNotifier{
   List<ShelfVO> get shelfList => _shelfList;
   var isDisposed = false;
 
+
   ShelfBloc(){
     _bookModel.getShelvesFromDB().listen((event) {
       _shelfList = event;
+      debugPrint("Shelf DB List: Changes");
       safeNotifyListener();
     }).onError((error){
       debugPrint("Shelf DB error $error ");
@@ -26,6 +28,7 @@ class ShelfBloc extends ChangeNotifier{
     ShelfVO shelfVO = ShelfVO(id: uuid.v4(),name: shelfName,bookNo: 0);
     _bookModel.saveShelf(shelfVO);
   }
+
   void safeNotifyListener() {
     if (!isDisposed) {
       notifyListeners();

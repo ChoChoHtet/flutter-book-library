@@ -11,11 +11,13 @@ class ItemGridView extends StatelessWidget {
     required this.title,
     required this.author,
     required this.onTapBook,
+    required this.onTapMenu,
   }) : super(key: key);
   final String imgPath;
   final String title;
   final String author;
   final Function(String) onTapBook;
+  final Function(String, String, String) onTapMenu;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,10 @@ class ItemGridView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            BookCoverSection(imgPath: imgPath,),
+            BookCoverSection(
+              imgPath: imgPath,
+              onTapMenu: () => onTapMenu(title, imgPath, author),
+            ),
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.325,
               child: NormalText(
@@ -49,11 +54,11 @@ class ItemGridView extends StatelessWidget {
 }
 
 class BookCoverSection extends StatelessWidget {
-  const BookCoverSection({
-    Key? key,
-    required this.imgPath,
-  }) : super(key: key);
+  const BookCoverSection(
+      {Key? key, required this.imgPath, required this.onTapMenu})
+      : super(key: key);
   final String imgPath;
+  final VoidCallback onTapMenu;
 
   @override
   Widget build(BuildContext context) {
@@ -63,19 +68,22 @@ class BookCoverSection extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 10, right: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        image:  DecorationImage(
+        image: DecorationImage(
           image: NetworkImage(imgPath.isNotEmpty ? imgPath : imgUrl3),
           fit: BoxFit.cover,
         ),
       ),
       child: Stack(
         children: [
-          const Align(
+          Align(
             alignment: Alignment.topRight,
-            child: Icon(
-              Icons.more_horiz_rounded,
-              color: Colors.white,
-              size: 30,
+            child: InkWell(
+              onTap: onTapMenu,
+              child: const Icon(
+                Icons.more_horiz_rounded,
+                color: Colors.white,
+                size: 30,
+              ),
             ),
           ),
           Align(

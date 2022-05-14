@@ -8,12 +8,14 @@ class ItemListView extends StatelessWidget {
     required this.title,
     required this.author,
     required this.onTapBook,
+    required this.onTapMenu,
 
   }) : super(key: key);
   final String imgPath;
   final String title;
   final String author;
   final Function(String) onTapBook;
+  final Function(String,String,String) onTapMenu;
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +50,12 @@ class ItemListView extends StatelessWidget {
             const SizedBox(
               width: 30,
             ),
-            const Icon(
-              Icons.more_horiz_rounded,
-              size: normalIconSize,
+            InkWell(
+              onTap: () => onTapMenu(title,imgPath,author),
+              child: const Icon(
+                Icons.more_horiz_rounded,
+                size: normalIconSize,
+              ),
             ),
           ],
         ),

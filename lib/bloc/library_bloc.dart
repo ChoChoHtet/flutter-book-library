@@ -62,7 +62,12 @@ class LibraryBloc extends ChangeNotifier {
     List<CategoryChipVO> selected =
         categoryList.where((element) => element.isSelected == true).toList();
     isShowClearChip = selected.isNotEmpty;
-    _bookList = await filterBooks(selected);
+    if(selected.isNotEmpty){
+      _bookList = await filterBooks(selected);
+    }else{
+      _bookList = _bookTempList;
+    }
+
   }
 
   Future<List<BookVO>> filterBooks(List<CategoryChipVO> selected) {

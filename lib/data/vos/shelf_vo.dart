@@ -23,4 +23,23 @@ class ShelfVO {
     this.bookNo,
     this.books,
   });
+
+  @override
+  String toString() {
+    return 'ShelfVO{id: $id, name: $name, bookNo: $bookNo, books: $books}';
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ShelfVO &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          name == other.name &&
+          bookNo == other.bookNo &&
+          books == other.books;
+
+  @override
+  int get hashCode =>
+      id.hashCode ^ name.hashCode ^ bookNo.hashCode ^ books.hashCode;
 }

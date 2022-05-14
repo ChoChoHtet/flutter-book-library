@@ -9,16 +9,18 @@ class ItemBookView extends StatelessWidget {
     required this.description,
     required this.author,
     required this.onTapBook,
+    required this.onTapMenu,
   }) : super(key: key);
   final String imgPath;
   final String description;
   final String author;
   final Function(String) onTapBook;
+  final Function(String,String) onTapMenu;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){
+      onTap: () {
         onTapBook(description);
       },
       child: Container(
@@ -37,12 +39,15 @@ class ItemBookView extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
               ),
-              child: const Align(
+              child: Align(
                 alignment: Alignment.topRight,
-                child: Icon(
-                  Icons.more_horiz_rounded,
-                  color: Colors.white,
-                  size: normalIconSize,
+                child: InkWell(
+                  onTap: () => onTapMenu(description,imgPath),
+                  child: const Icon(
+                    Icons.more_horiz_rounded,
+                    color: Colors.white,
+                    size: normalIconSize,
+                  ),
                 ),
               ),
             ),

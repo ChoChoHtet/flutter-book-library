@@ -90,4 +90,14 @@ class BookModelImpl extends BookModel {
   void saveShelf(ShelfVO shelfVO) {
     return _shelfDao.saveShelf(shelfVO);
   }
+
+  @override
+  void updateShelf(int index, ShelfVO shelfVO) {
+   return _shelfDao.updateShelf(index, shelfVO);
+  }
+
+  @override
+  void deleteShelf(String id) async{
+   _shelfDao.deleteShelf(id);
+  }
 }

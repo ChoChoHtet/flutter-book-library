@@ -5,6 +5,9 @@ import 'package:book_library/widgets/sort_and_list_menu_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../resource/string.dart';
+import '../widgets/normal_text.dart';
+import 'add_shelf_page.dart';
 import 'detail_book_page.dart';
 
 class YourBookPage extends StatefulWidget {
@@ -100,6 +103,7 @@ class _YourBookPageState extends State<YourBookPage> {
                       });
                     },
                     onTapBook: (title) =>_navigateToBookDetailScreen(context, title),
+                    onTapMenu: (title,imgPath,author) => _showAddShelfMenuList(context, title, imgPath, author),
                   )
                 ],
               ),
@@ -274,6 +278,115 @@ class _YourBookPageState extends State<YourBookPage> {
           );
         }),
       );
+  void _navigateTAddShelfScreen(BuildContext context, String title) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => AddShelfPage(
+            bookTitle: title,
+          )),
+    );
+  }
+
+  void _onTapMenuItem(String action, {String bookTitle = ""}) {
+    //ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("onTap Menu")),);
+    debugPrint("on Tap Menu: $action");
+    if (action == menuAddToShelf) {
+      _navigateTAddShelfScreen(context, bookTitle);
+    }
+  }
+
+  void _showAddShelfMenuList(BuildContext context, String title, String imgPath,String author) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) => SizedBox(
+          height: MediaQuery.of(context).size.height * 0.6,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 16, vertical: 10),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: SizedBox(
+                        width: 70,
+                        height: 100,
+                        child: Image.network(
+                          imgPath,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: paddingNormal,
+                    ),
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children:  [
+                            NormalText(text:title),
+                            NormalText(text: author),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(),
+              Wrap(
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.remove_circle_outline),
+                    title: const NormalText(
+                      text: menuRemoveDownload,
+                    ),
+                    onTap: () => _onTapMenuItem(menuRemoveDownload),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.delete),
+                    title: const NormalText(
+                      text: menuDeleteLibrary,
+                    ),
+                    onTap: () => _onTapMenuItem(menuDeleteLibrary),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.add),
+                    title: const NormalText(
+                      text: menuAddToShelf,
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                      _onTapMenuItem(menuAddToShelf, bookTitle: title);
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.book),
+                    title: const NormalText(
+                      text: menuAddThisBook,
+                    ),
+                    onTap: () => _onTapMenuItem(menuAddThisBook),
+                  )
+                ],
+              ),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text("Buy SGD 10"),
+                ),
+              )
+            ],
+          ),
+        ));
+  }
 }
 
 class ClearChipView extends StatelessWidget {
@@ -301,12 +414,6 @@ class ClearChipView extends StatelessWidget {
       selected: chipClose,
       selectedColor: Colors.blueAccent,
       onSelected: (select) {
-        /* setState(() {
-          chipClose = !chipClose;
-          chipBook = false;
-          chipPurchase = false;
-          chipDownload = false;
-        });*/
         onSelectChip(!chipClose);
       },
     );

@@ -10,14 +10,16 @@ class HorizontalBookView extends StatelessWidget {
   final List<BookVO> bookList;
   final Function(String) onTapBook;
   final VoidCallback onTapSeeMore;
+  final Function(String, String) onTapMenu;
 
-  const HorizontalBookView(
-      {Key? key,
-      required this.title,
-      required this.bookList,
-      required this.onTapBook,
-      required this.onTapSeeMore})
-      : super(key: key);
+  const HorizontalBookView({
+    Key? key,
+    required this.title,
+    required this.bookList,
+    required this.onTapBook,
+    required this.onTapSeeMore,
+    required this.onTapMenu,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -35,14 +37,18 @@ class HorizontalBookView extends StatelessWidget {
         SizedBox(
           height: 250,
           child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: bookList.length,
-              itemBuilder: (builder, index) => ItemBookView(
-                imgPath: bookList[index].bookImage ?? imgUrl3,
-                description: bookList[index].title ?? "",
-                author: bookList[index].author ?? "",
-                onTapBook: (title ) => onTapBook(title),
-              ),),
+            scrollDirection: Axis.horizontal,
+            itemCount: bookList.length,
+            itemBuilder: (builder, index) => ItemBookView(
+              imgPath: bookList[index].bookImage ?? imgUrl3,
+              description: bookList[index].title ?? "",
+              author: bookList[index].author ?? "",
+              onTapBook: (title) => onTapBook(title),
+              onTapMenu: (title,imgPath) {
+                onTapMenu(title, imgPath);
+              },
+            ),
+          ),
         )
       ],
     );

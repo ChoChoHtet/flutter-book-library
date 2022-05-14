@@ -9,8 +9,10 @@ class EBookPage extends StatelessWidget {
   const EBookPage({
     Key? key,
     required this.overviewList,
+    required this.onTapMenu,
   }) : super(key: key);
   final List<OverviewVO> overviewList;
+  final Function(String,String) onTapMenu;
 
   @override
   Widget build(BuildContext context) {
@@ -22,29 +24,36 @@ class EBookPage extends StatelessWidget {
         5,
       ),
       child: ListView.separated(
-        separatorBuilder: (context, index) => const SizedBox(height: 20,),
+        separatorBuilder: (context, index) => const SizedBox(
+          height: 20,
+        ),
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         itemCount: overviewList.length,
-        itemBuilder: (context,index) {
+        itemBuilder: (context, index) {
           return HorizontalBookView(
-              title: overviewList[index].name ?? "",
-              bookList: overviewList[index].books ?? [],
-              onTapBook: (title) => _navigateToBookDetailScreen(context,title),
-              onTapSeeMore: () => _navigateTSeeMoreScreen(
-                  context, overviewList[index].name ?? "",
-                  overviewList[index].bestSellerDate ?? "",
-                0
-              ));
+            title: overviewList[index].name ?? "",
+            bookList: overviewList[index].books ?? [],
+            onTapBook: (title) => _navigateToBookDetailScreen(context, title),
+            onTapSeeMore: () => _navigateTSeeMoreScreen(
+                context,
+                overviewList[index].name ?? "",
+                overviewList[index].bestSellerDate ?? "",
+                0),
+            onTapMenu:(title,imgPath) => onTapMenu(title,imgPath),
+          );
         },
       ),
     );
   }
 
-  void _navigateToBookDetailScreen(BuildContext context,String title) {
+  void _navigateToBookDetailScreen(BuildContext context, String title) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) =>  DetailBookPage(title: title,)),
+      MaterialPageRoute(
+          builder: (context) => DetailBookPage(
+                title: title,
+              )),
     );
   }
 
@@ -54,10 +63,10 @@ class EBookPage extends StatelessWidget {
       context,
       MaterialPageRoute(
           builder: (context) => DetailSeeMorePage(
-            title: title,
-            date: date,
-            offset: offset,
-          )),
+                title: title,
+                date: date,
+                offset: offset,
+              )),
     );
   }
 }

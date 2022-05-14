@@ -11,6 +11,8 @@ abstract class BookModel {
 
   void saveBookVisited(BookVO bookVO);
   void saveShelf(ShelfVO shelfVO);
+  void updateShelf(int index,ShelfVO shelfVO);
+  void deleteShelf(String id);
 
   Stream<List<BookVO>> getVisitedBookFromDB();
   Stream<List<ShelfVO>> getShelvesFromDB();

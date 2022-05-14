@@ -33,8 +33,17 @@ class ShelfDaoImpl extends ShelfDao {
   void saveShelf(ShelfVO shelfVO) async {
     await getShelfBox().put(shelfVO.id, shelfVO);
   }
+  @override
+  void updateShelf(int index,ShelfVO shelfVO) async {
+    await getShelfBox().putAt(index, shelfVO);
+  }
 
   Box<ShelfVO> getShelfBox() {
     return Hive.box<ShelfVO>(kBoxNameShelf);
+  }
+
+  @override
+  void deleteShelf(String id) async {
+   await getShelfBox().delete(id);
   }
 }

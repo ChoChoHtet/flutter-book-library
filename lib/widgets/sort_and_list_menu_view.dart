@@ -15,6 +15,7 @@ class SortAndListMenuView extends StatelessWidget {
     required this.onTapSortBy,
     required this.onTapList,
     required this.onTapBook,
+    required this.onTapMenu,
   }) : super(key: key);
 
   final String sortByName;
@@ -23,6 +24,7 @@ class SortAndListMenuView extends StatelessWidget {
   final VoidCallback onTapSortBy;
   final VoidCallback onTapList;
   final Function(String) onTapBook;
+  final Function(String,String,String) onTapMenu;
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +41,7 @@ class SortAndListMenuView extends StatelessWidget {
           bookList: bookList,
           result: listType,
           onTapBook: (title) => onTapBook(title),
+          onTapMenu: (title,imgPath,author) => onTapMenu(title,imgPath,author),
         )
       ],
     );
@@ -97,12 +100,14 @@ class ListMenuSection extends StatelessWidget {
     required this.bookList,
     required int result,
     required this.onTapBook,
+    required this.onTapMenu,
   })  : _result = result,
         super(key: key);
 
   final int _result;
   final List<BookVO> bookList;
   final Function(String) onTapBook;
+  final Function(String,String,String) onTapMenu;
 
   @override
   Widget build(BuildContext context) {
@@ -120,6 +125,7 @@ class ListMenuSection extends StatelessWidget {
                 title: bookList[index].title ?? "",
                 author: bookList[index].author ?? "",
                 onTapBook: (title) => onTapBook(title),
+                onTapMenu: (title,imgPath,author) => onTapMenu(title,imgPath,author),
               ),
             )
           : GridView.builder(
@@ -136,6 +142,7 @@ class ListMenuSection extends StatelessWidget {
                 title: bookList[index].title ?? "",
                 author: bookList[index].author ?? "",
                 onTapBook: (title) => onTapBook(title),
+                onTapMenu: (title,imgPath,author) => onTapMenu(title,imgPath,author),
               ),
             ),
     );

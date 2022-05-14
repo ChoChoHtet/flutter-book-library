@@ -7,8 +7,6 @@ import 'package:book_library/widgets/normal_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../data/vos/shelf_vo.dart';
-
 class YourShelvesPage extends StatefulWidget {
   const YourShelvesPage({Key? key}) : super(key: key);
 
@@ -40,23 +38,21 @@ class _YourShelvesPageState extends State<YourShelvesPage> {
             Positioned.fill(
               child: Container(
                 margin: const EdgeInsets.only(top: 16),
-                child: Selector<ShelfBloc, List<ShelfVO>>(
-                  selector: (context, bloc) => bloc.shelfList,
-                  builder: (context, shelfList, child) => ListView.builder(
-                    itemCount: shelfList.isNotEmpty ? shelfList.length : 1,
+                child: Consumer<ShelfBloc>(
+                //  selector: (context, bloc) => bloc.shelfList,
+                  builder: (context, bloc, child) => ListView.builder(
+                    itemCount: bloc.shelfList.isNotEmpty ? bloc.shelfList.length : 1,
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemBuilder: (context, index) => shelfList.isNotEmpty
+                    itemBuilder: (context, index) =>  bloc.shelfList.isNotEmpty
                         ? Column(
                             children: [
                               InkWell(
                                   onTap: () => _navigateDetailShelveScreen(
-                                      context,
-                                      "10 International Design Books to Read",
-                                      3),
+                                      context, bloc.shelfList[index].id ?? "",index),
                                   child:  ItemShelveView(
-                                    shelfName: shelfList[index].name ?? "",
-                                    bookNo: shelfList[index].bookNo ?? 0,
+                                    shelfName:  bloc.shelfList[index].name ?? "",
+                                    bookNo:  bloc.shelfList[index].bookNo ?? 0,
                                   )),
                               const Divider(
                                 height: 2,
@@ -101,13 +97,13 @@ class _YourShelvesPageState extends State<YourShelvesPage> {
   }
 
   void _navigateDetailShelveScreen(
-      BuildContext context, String shelveName, int noOfBook) {
+      BuildContext context, String id,int curIndex) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => DetailShelvePage(
-          shelvesName: shelveName,
-          noOfBooks: noOfBook,
+          shelfId: id,
+          index: curIndex,
         ),
       ),
     );

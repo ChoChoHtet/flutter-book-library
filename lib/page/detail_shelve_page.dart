@@ -1,20 +1,25 @@
+import 'package:book_library/bloc/detail_shelf_bloc.dart';
 import 'package:book_library/resource/dimen.dart';
+import 'package:book_library/resource/string.dart';
 import 'package:book_library/utils/action_enum.dart';
 import 'package:book_library/widgets/custom_back_icon_view.dart';
 import 'package:book_library/widgets/normal_text.dart';
 import 'package:book_library/widgets/sort_and_list_menu_view.dart';
+import 'package:book_library/widgets/title_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
+import 'add_shelf_page.dart';
 import 'detail_book_page.dart';
 
 class DetailShelvePage extends StatefulWidget {
   const DetailShelvePage({
     Key? key,
-    required this.shelvesName,
-    required this.noOfBooks,
+    required this.shelfId,
+    required this.index,
   }) : super(key: key);
-  final String shelvesName;
-  final int noOfBooks;
+  final String shelfId;
+  final int index;
 
   @override
   State<DetailShelvePage> createState() => _DetailShelvePageState();
@@ -23,98 +28,123 @@ class DetailShelvePage extends StatefulWidget {
 class _DetailShelvePageState extends State<DetailShelvePage> {
   int _result = 1;
   int selectedSortBy = 1;
-  ShelfAction actionShelf = ShelfAction.none;
-  String? editedShelfName = "";
+  /* ShelfAction actionShelf = ShelfAction.none;
+  String? editedShelfName = "";*/
+
+  DetailShelfBloc? detailShelfBloc;
+  @override
+  void initState() {
+    super.initState();
+    detailShelfBloc = DetailShelfBloc(widget.shelfId);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    detailShelfBloc?.clearDisposeNotify();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: NestedScrollView(
-          floatHeaderSlivers: true,
-          headerSliverBuilder: (context, innerBoxIsScrolled) => [
-                SliverAppBar(
-                  floating: true,
-                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                  leading: CustomBackIconView(
-                    onTapBack: () => Navigator.pop(context),
-                  ),
-                  actions: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: paddingNormal),
-                      child: InkWell(
-                        onTap: () {
-                          debugPrint("On Tap Vertical Menu");
-                          var shelfController = _showShelveMenu(context);
-                          shelfController.then((value) {
-                            setState(() {
-                              debugPrint("shelf action: $actionShelf");
-                              editedShelfName = value;
+    return ChangeNotifierProvider(
+      create: (context) => detailShelfBloc,
+      child: Scaffold(
+        body: NestedScrollView(
+            floatHeaderSlivers: true,
+            headerSliverBuilder: (context, innerBoxIsScrolled) => [
+                  SliverAppBar(
+                    floating: true,
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                    leading: CustomBackIconView(
+                      onTapBack: () => Navigator.pop(context),
+                    ),
+                    actions: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: paddingNormal),
+                        child: InkWell(
+                          onTap: () {
+                            debugPrint("On Tap Vertical Menu");
+                            var shelfController = _showShelveMenu(context);
+                            shelfController.then((value) {
+                              if (value == ShelfAction.delete) {
+                                /* detailShelfBloc?.deleteShelf(widget.shelfId);
+                                Navigator.pop(context);*/
+                                _showDeleteShelfDialog(context,
+                                    detailShelfBloc?.shelfItem?.name ?? "");
+                              }
                             });
-                          });
-                        },
-                        child: const Icon(
-                          Icons.more_vert,
-                          size: normalIconSize,
-                          color: Colors.black54,
+                          },
+                          child: const Icon(
+                            Icons.more_vert,
+                            size: normalIconSize,
+                            color: Colors.black54,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
-          body: MediaQuery.removePadding(
-            context: context,
-            removeTop: true,
-            child: ListView(
-              children: [
-                ShelfInfoAndEditView(
-                  shelfName:
-                      ShelfAction.done == actionShelf && editedShelfName != null
-                          ? editedShelfName!
-                          : widget.shelvesName,
-                  bookNo: widget.noOfBooks,
-                  shelfAction: actionShelf,
-                  onTapDoneEdit: (shelfName) {
-                    debugPrint("Edited shelf name:$shelfName");
-                    setState(() {
-                      actionShelf = ShelfAction.done;
-                      editedShelfName = shelfName;
-                    });
-                  },
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: paddingNormal),
-                  child: Divider(
-                    thickness: 1,
+                    ],
                   ),
-                ),
-                Container(
-                  padding:
-                      const EdgeInsets.only(bottom: 10, left: 16, right: 16),
-                  child: SortAndListMenuView(
-                    bookList: [],
-                    listType: _result,
-                    sortByName: getSortTitle(selectedSortBy),
-                    onTapSortBy: () {
-                      var sortByController = _showMenuSort(context);
-                      sortByController.then((value) {
-                        setState(() {});
-                      });
-                    },
-                    onTapList: () {
-                      var bottomSheetController = _showMenuList(context);
-                      bottomSheetController.then(
-                        (value) {
-                          setState(() {});
+                ],
+            body: MediaQuery.removePadding(
+              context: context,
+              removeTop: true,
+              child: Consumer<DetailShelfBloc>(
+                builder: (context, bloc, child) {
+                  return ListView(
+                    children: [
+                      ShelfInfoAndEditView(
+                        shelfName: bloc.shelfItem?.name ?? "",
+                        bookNo: bloc.shelfItem?.bookNo ?? 0,
+                        shelfAction: bloc.actionShelf,
+                        onTapDoneEdit: (shelfName) {
+                          debugPrint("Edited shelf name:$shelfName");
+                          bloc.onTapDoneEdit(shelfName, widget.index);
                         },
-                      );
-                    },
-                    onTapBook: (title) => _navigateToBookDetailScreen(context, title),
-                  ),
-                ),
-              ],
-            ),
-          )),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: paddingNormal),
+                        child: Divider(
+                          thickness: 1,
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(
+                            bottom: 10, left: 16, right: 16),
+                        child: bloc.shelfItem?.books?.isNotEmpty ?? false
+                            ? SortAndListMenuView(
+                                bookList: bloc.shelfItem?.books ?? [],
+                                listType: _result,
+                                sortByName: getSortTitle(selectedSortBy),
+                                onTapSortBy: () {
+                                  var sortByController = _showMenuSort(context);
+                                  sortByController.then((value) {
+                                    setState(() {});
+                                  });
+                                },
+                                onTapList: () {
+                                  var bottomSheetController =
+                                      _showMenuList(context);
+                                  bottomSheetController.then(
+                                    (value) {
+                                      setState(() {});
+                                    },
+                                  );
+                                },
+                                onTapBook: (title) =>
+                                    _navigateToBookDetailScreen(context, title),
+                                onTapMenu: (title, imgPath, author) =>
+                                    _showAddShelfMenuList(
+                                        context, title, imgPath, author),
+                              )
+                            : const Center(
+                                child: TitleText(title: "No Shelves."),
+                              ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            )),
+      ),
     );
   }
 
@@ -147,6 +177,35 @@ class _DetailShelvePageState extends State<DetailShelvePage> {
     );
   }
 
+  _showDeleteShelfDialog(BuildContext context, String shelfName) {
+    showCupertinoDialog(
+        context: context,
+        builder: (context) => CupertinoAlertDialog(
+              title: TitleText(
+                title: shelfName,
+              ),
+              content: const Text(contentShelfDelete),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    debugPrint("cancel button");
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("CANCEL"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    debugPrint("cancel button");
+                    detailShelfBloc?.deleteShelf(widget.shelfId);
+                    Navigator.of(context).pop();
+                    Navigator.pop(context);
+                  },
+                  child: const Text("Delete"),
+                ),
+              ],
+            ));
+  }
+
   _showShelveMenu(BuildContext context) => showModalBottomSheet(
         context: context,
         builder: (context) => StatefulBuilder(builder: (context, setState) {
@@ -165,7 +224,8 @@ class _DetailShelvePageState extends State<DetailShelvePage> {
                     size: normalIconSize,
                   ),
                   onTap: () {
-                    actionShelf = ShelfAction.edit;
+                    //actionShelf = ShelfAction.edit;
+                    detailShelfBloc?.onTapEditMenu();
                     Navigator.pop(context);
                   },
                 ),
@@ -179,8 +239,9 @@ class _DetailShelvePageState extends State<DetailShelvePage> {
                     size: normalIconSize,
                   ),
                   onTap: () {
-                    actionShelf = ShelfAction.delete;
-                    Navigator.pop(context);
+                    //actionShelf = ShelfAction.delete;
+                    detailShelfBloc?.onTapDeleteMenu();
+                    Navigator.pop(context, ShelfAction.delete);
                   },
                 ),
               ],
@@ -329,6 +390,120 @@ class _DetailShelvePageState extends State<DetailShelvePage> {
           );
         }),
       );
+  void _navigateTAddShelfScreen(BuildContext context, String title) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => AddShelfPage(
+                bookTitle: title,
+              )),
+    );
+  }
+
+  void _onTapMenuItem(String action, {String bookTitle = ""}) {
+    //ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("onTap Menu")),);
+    debugPrint("on Tap Menu: $action");
+    if (action == menuAddToShelf) {
+      _navigateTAddShelfScreen(context, bookTitle);
+    }
+  }
+
+  void _showAddShelfMenuList(
+      BuildContext context, String title, String imgPath, String author) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) => SizedBox(
+              height: MediaQuery.of(context).size.height * 0.6,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 10),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: SizedBox(
+                            width: 70,
+                            height: 100,
+                            child: Image.network(
+                              imgPath,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: paddingNormal,
+                        ),
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  title,
+                                  style:
+                                      const TextStyle(fontSize: mediumTextSize),
+                                ),
+                                NormalText(text: author),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(),
+                  Wrap(
+                    children: [
+                      ListTile(
+                        leading: const Icon(Icons.remove_circle_outline),
+                        title: const NormalText(
+                          text: menuRemoveDownload,
+                        ),
+                        onTap: () => _onTapMenuItem(menuRemoveDownload),
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.delete),
+                        title: const NormalText(
+                          text: menuDeleteLibrary,
+                        ),
+                        onTap: () => _onTapMenuItem(menuDeleteLibrary),
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.add),
+                        title: const NormalText(
+                          text: menuAddToShelf,
+                        ),
+                        onTap: () {
+                          Navigator.pop(context);
+                          _onTapMenuItem(menuAddToShelf, bookTitle: title);
+                        },
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.book),
+                        title: const NormalText(
+                          text: menuAddThisBook,
+                        ),
+                        onTap: () => _onTapMenuItem(menuAddThisBook),
+                      )
+                    ],
+                  ),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16),
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text("Buy SGD 10"),
+                    ),
+                  )
+                ],
+              ),
+            ));
+  }
 }
 
 class ShelfInfoAndEditView extends StatelessWidget {
