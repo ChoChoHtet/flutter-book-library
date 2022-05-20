@@ -13,7 +13,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final List<Widget> _pages =  [HomePage(),const LibraryPage()];
+  final List<Widget> _pages = [const HomePage(), const LibraryPage()];
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -41,11 +41,13 @@ class _MainPageState extends State<MainPage> {
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.home,
+                key: (Key(keyHomeTab)),
               ),
               label: bottomNavHome),
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.book,
+                key: (Key(keyLibraryTab)),
               ),
               label: bottomNavLibrary),
         ],

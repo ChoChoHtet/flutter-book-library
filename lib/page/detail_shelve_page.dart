@@ -111,14 +111,16 @@ class _DetailShelvePageState extends State<DetailShelvePage> {
                             bottom: 10, left: 16, right: 16),
                         child: bloc.shelfItem?.books?.isNotEmpty ?? false
                             ? SortAndListMenuView(
-                                bookList: bloc.shelfItem?.books ?? [],
+                                bookList: bloc.bookList,
                                 listType: _result,
                                 sortByName: getSortTitle(selectedSortBy),
                                 onTapSortBy: () {
                                   var sortByController = _showMenuSort(context);
                                   sortByController.then((value) {
-                                    setState(() {});
+                                  //  setState(() {});
+                                    detailShelfBloc?.sortBy(selectedSortBy);
                                   });
+
                                 },
                                 onTapList: () {
                                   var bottomSheetController =

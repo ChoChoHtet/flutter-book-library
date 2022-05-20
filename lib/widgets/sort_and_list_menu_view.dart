@@ -1,3 +1,4 @@
+import 'package:book_library/resource/string.dart';
 import 'package:flutter/material.dart';
 
 import '../data/vos/book_vo.dart';
@@ -83,6 +84,7 @@ class SortByView extends StatelessWidget {
           padding: const EdgeInsets.only(right: paddingNormal),
           child: InkWell(
             onTap: onTapList,
+            key: const Key(keyGrid),
             child: const Icon(
               Icons.list_alt,
               size: normalIconSize,
@@ -121,6 +123,7 @@ class ListMenuSection extends StatelessWidget {
               ),
               itemCount: bookList.length,
               itemBuilder: (context, index) => ItemListView(
+                key: Key("$keyYourBook${bookList[index].title ?? ""}"),
                 imgPath: bookList[index].bookImage ?? "",
                 title: bookList[index].title ?? "",
                 author: bookList[index].author ?? "",
@@ -138,6 +141,7 @@ class ListMenuSection extends StatelessWidget {
                   childAspectRatio: _result == 2 ? 0.8 : 0.5,
                   crossAxisSpacing: 10),
               itemBuilder: (context, index) => ItemGridView(
+                key: Key("$keyYourBookGrid${bookList[index].title ?? ""}"),
                 imgPath: bookList[index].bookImage ?? "",
                 title: bookList[index].title ?? "",
                 author: bookList[index].author ?? "",

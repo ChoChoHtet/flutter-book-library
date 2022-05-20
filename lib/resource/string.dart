@@ -23,3 +23,12 @@ const imgUrl3 = "https://play-lh.googleusercontent.com/7YZ4JHnvx2b16zkAFtXyZDw6q
 
 //Shelf Page
 const contentShelfDelete = "This shelf will be deleted from all of your devices. Purchases, samples, uploads and active rentals on this shelf will stay in your books";
+
+//key
+const keyBookDetailBack = "BookDetailBack";
+const keyLibraryTab = "keyLibraryTab";
+const keyHomeTab ="keyHomeTab";
+const keyYourBook ="YourBook_";
+const keyYourBookGrid ="YourBookGrid_";
+const keyGrid = "GridIcon";
+const keyTwoGrid = "Two Grid Menu";

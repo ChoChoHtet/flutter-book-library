@@ -175,6 +175,7 @@ class _YourBookPageState extends State<YourBookPage> {
                       ),
                     ),
                     ListTile(
+                      key: const Key(keyTwoGrid),
                       title: const Text("Two Grid"),
                       leading: Radio(
                         value: 2,

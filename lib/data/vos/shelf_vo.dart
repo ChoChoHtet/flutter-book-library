@@ -17,17 +17,16 @@ class ShelfVO {
   @HiveField(3)
   List<BookVO>? books;
 
+  @HiveField(4)
+  int? createdDateTime;
+
   ShelfVO({
     this.id,
     this.name,
     this.bookNo,
     this.books,
+    this.createdDateTime,
   });
-
-  @override
-  String toString() {
-    return 'ShelfVO{id: $id, name: $name, bookNo: $bookNo, books: $books}';
-  }
 
   @override
   bool operator ==(Object other) =>
@@ -37,9 +36,14 @@ class ShelfVO {
           id == other.id &&
           name == other.name &&
           bookNo == other.bookNo &&
-          books == other.books;
+          books == other.books &&
+          createdDateTime == other.createdDateTime;
 
   @override
   int get hashCode =>
-      id.hashCode ^ name.hashCode ^ bookNo.hashCode ^ books.hashCode;
+      id.hashCode ^
+      name.hashCode ^
+      bookNo.hashCode ^
+      books.hashCode ^
+      createdDateTime.hashCode;
 }

@@ -58,6 +58,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           ),
         ),
         body: NestedScrollView(
+          key: const Key("Home_Scroll"),
           headerSliverBuilder: (context, innerBoxIsScrolled) {
             return [
               SliverToBoxAdapter(
@@ -74,6 +75,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           itemCount: bookList.length,
                           itemBuilder: (context, itemIndex, pageViewIndex) =>
                               PlayBookItemView(
+                            title: bookList[itemIndex].title ?? "",
                             imgPath: bookList[itemIndex].bookImage ?? "",
                             onTapMenu: () => _showMenuList(
                                 context,
@@ -196,11 +198,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             padding: const EdgeInsets.only(top: 10),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children:  [
+                              children: [
                                 Text(
                                   title,
                                   style:
-                                  const TextStyle(fontSize: mediumTextSize),
+                                      const TextStyle(fontSize: mediumTextSize),
                                 ),
                                 const NormalText(text: "Writer"),
                               ],

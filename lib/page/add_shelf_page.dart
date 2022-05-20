@@ -5,6 +5,9 @@ import 'package:book_library/viewItems/item_shelve_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../data/vos/book_vo.dart';
+import '../resource/string.dart';
+
 class AddShelfPage extends StatefulWidget {
   const AddShelfPage({
     Key? key,
@@ -59,11 +62,27 @@ class _AddShelfPageState extends State<AddShelfPage> {
                       addShelfBloc?.addBookToShelves(widget.bookTitle, index);
                     },
                     child: ItemShelveView(
+                        imgPath: shelfList[index].books?.first.bookImage ?? "",
+                        imgPath2: getSecondImgPath(shelfList[index].books ?? []),
                         shelfName: shelfList[index].name ?? "",
                         bookNo: shelfList[index].bookNo ?? 0),
                   );
                 }),
           )),
     );
+  }
+
+  String getFirstImagePath(List<BookVO> bookList){
+    if(bookList.length == 1 ){
+      return bookList.first.bookImage ?? "" ;
+    }
+    return "" ;
+  }
+  String getSecondImgPath(List<BookVO> bookList){
+    if(bookList.length == 1 || bookList.isEmpty ){
+      return  "" ;
+    }else {
+      return bookList.last.bookImage ?? "";
+    }
   }
 }

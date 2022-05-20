@@ -32,6 +32,7 @@ class EBookPage extends StatelessWidget {
         itemCount: overviewList.length,
         itemBuilder: (context, index) {
           return HorizontalBookView(
+            key: Key("Home_${overviewList[index].name ?? ""}"),
             title: overviewList[index].name ?? "",
             bookList: overviewList[index].books ?? [],
             onTapBook: (title) => _navigateToBookDetailScreen(context, title),

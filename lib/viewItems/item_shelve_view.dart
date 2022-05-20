@@ -4,15 +4,21 @@ import 'package:book_library/widgets/normal_text.dart';
 import 'package:flutter/material.dart';
 
 class ItemShelveView extends StatelessWidget {
-  const ItemShelveView({Key? key,
+  const ItemShelveView({
+    Key? key,
     required this.shelfName,
     required this.bookNo,
+    required this.imgPath,
+    required this.imgPath2,
   }) : super(key: key);
   final String shelfName;
   final int bookNo;
+  final String imgPath;
+  final String imgPath2;
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("1:$imgPath,2:$imgPath2");
     return Container(
       height: 90,
       margin: const EdgeInsets.only(top: 10, left: 16, right: 16),
@@ -23,22 +29,24 @@ class ItemShelveView extends StatelessWidget {
             width: 93,
             child: Stack(
               children: [
-                Positioned(
-                  top: 15,
-                  right: 2,
-                  left: 2,
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(8),
-                      topRight: Radius.circular(8),
-                    ),
-                    child: SizedBox(
-                      width: 80,
-                      height: 90,
-                      child: Image.network(
-                        imgUrl,
-                        fit: BoxFit.cover,
+                Visibility(
+                  visible: imgPath2.isNotEmpty,
+                  child: Positioned(
+                    top: 15,
+                    right: 2,
+                    left: 2,
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(8),
+                        topRight: Radius.circular(8),
                       ),
+                      child: SizedBox(
+                          width: 80,
+                          height: 90,
+                          child: Image.network(
+                            imgPath,
+                            fit: BoxFit.cover,
+                          )),
                     ),
                   ),
                 ),
@@ -48,12 +56,13 @@ class ItemShelveView extends StatelessWidget {
                     topRight: Radius.circular(10),
                   ),
                   child: SizedBox(
-                      width: 80,
-                      height: 90,
-                      child: Image.network(
-                        imgUrl2,
-                        fit: BoxFit.cover,
-                      )),
+                    width: 80,
+                    height: 90,
+                    child:  imgPath.isNotEmpty || imgPath2.isNotEmpty? Image.network(
+                      imgPath2.isNotEmpty ? imgPath2 : imgPath,
+                      fit: BoxFit.cover,
+                    ):Image.asset("assets/empty.png"),
+                  ),
                 )
               ],
             ),
@@ -65,11 +74,11 @@ class ItemShelveView extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children:  [
+                children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 10),
                     child: Text(
-                     shelfName,
+                      shelfName,
                       style: const TextStyle(
                         color: Colors.black87,
                         fontSize: 18,

@@ -59,6 +59,7 @@ class _DetailBookPageState extends State<DetailBookPage> {
                   Icons.arrow_back_ios,
                   size: normalIconSize,
                   color: Colors.black54,
+                  key: Key(keyBookDetailBack),
                 ),
               ),
               actions: const [

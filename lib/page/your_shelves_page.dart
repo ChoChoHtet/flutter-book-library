@@ -7,6 +7,9 @@ import 'package:book_library/widgets/normal_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../data/vos/book_vo.dart';
+import '../resource/string.dart';
+
 class YourShelvesPage extends StatefulWidget {
   const YourShelvesPage({Key? key}) : super(key: key);
 
@@ -51,6 +54,8 @@ class _YourShelvesPageState extends State<YourShelvesPage> {
                                   onTap: () => _navigateDetailShelveScreen(
                                       context, bloc.shelfList[index].id ?? "",index),
                                   child:  ItemShelveView(
+                                    imgPath:  bloc.shelfList[index].books?.first.bookImage ?? "",
+                                    imgPath2: getSecondImgPath(bloc.shelfList[index].books ?? []),
                                     shelfName:  bloc.shelfList[index].name ?? "",
                                     bookNo:  bloc.shelfList[index].bookNo ?? 0,
                                   )),
@@ -86,7 +91,19 @@ class _YourShelvesPageState extends State<YourShelvesPage> {
       ),
     );
   }
-
+  String getFirstImagePath(List<BookVO> bookList){
+    if(bookList.length == 1 ){
+      return bookList.first.bookImage ?? "" ;
+    }
+    return "" ;
+  }
+  String getSecondImgPath(List<BookVO> bookList){
+    if(bookList.length == 1 || bookList.isEmpty ){
+      return  "" ;
+    }else {
+      return bookList.last.bookImage ?? "";
+    }
+  }
   void _navigateCreateShelveScreen(BuildContext context) {
     Navigator.push(
       context,

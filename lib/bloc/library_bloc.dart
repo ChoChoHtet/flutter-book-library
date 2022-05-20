@@ -22,8 +22,9 @@ class LibraryBloc extends ChangeNotifier {
 
   LibraryBloc() {
     _bookModel.getVisitedBookFromDB().listen((event) {
-      _bookList = event;
       _bookTempList = event;
+      event.sort((a, b) => a.visitedDateTime?.compareTo(b.visitedDateTime ?? -1) ?? 0);
+      _bookList = event.reversed.toList();
       categoriesName(event);
       safeNotifyListener();
     }).onError((error) {
@@ -99,9 +100,8 @@ class LibraryBloc extends ChangeNotifier {
   void sortBy(int sortType) {
     switch (sortType) {
       case 1:
-        _bookList.sort((a, b) =>
-            a.visitedDateTime?.compareTo(b.visitedDateTime ?? -1) ?? 0);
-        List<BookVO> temp = _bookList.reversed.toList();
+        _bookList.sort((a, b) => a.visitedDateTime?.compareTo(b.visitedDateTime ?? -1) ?? 0);
+       List<BookVO> temp = _bookList.reversed.toList();
         _bookList = temp;
         break;
       case 2:
@@ -109,16 +109,16 @@ class LibraryBloc extends ChangeNotifier {
             .toString()
             .toLowerCase()
             .compareTo(b.title.toString().toLowerCase()));
-        List<BookVO> temp = _bookList.reversed.toList();
-        _bookList = temp;
+       // List<BookVO> temp = _bookList.reversed.toList();
+       // _bookList = temp;
         break;
       case 3:
         _bookList.sort((a, b) => a.author
             .toString()
             .toLowerCase()
             .compareTo(b.author.toString().toLowerCase()));
-        List<BookVO> temp = _bookList.reversed.toList();
-        _bookList = temp;
+       // List<BookVO> temp = _bookList.reversed.toList();
+       // _bookList = temp;
         break;
     }
     safeNotifyListener();

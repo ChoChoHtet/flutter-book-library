@@ -3,11 +3,15 @@ import 'package:book_library/widgets/custom_icon_view.dart';
 import 'package:flutter/material.dart';
 
 class PlayBookItemView extends StatelessWidget {
-  const PlayBookItemView(
-      {Key? key, required this.onTapMenu, required this.imgPath})
-      : super(key: key);
+  const PlayBookItemView({
+    Key? key,
+    required this.onTapMenu,
+    required this.imgPath,
+    required this.title,
+  }) : super(key: key);
   final VoidCallback onTapMenu;
   final String imgPath;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -15,12 +19,14 @@ class PlayBookItemView extends StatelessWidget {
       elevation: 10,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Container(
+          key: Key("Carousel_$title"),
           width: 350,
           // height: MediaQuery.of(context).size.height * 0.3,
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           decoration: BoxDecoration(
-            image:  DecorationImage(
-                image: NetworkImage(imgPath.isNotEmpty ? imgPath : imgUrl3), fit: BoxFit.cover),
+            image: DecorationImage(
+                image: NetworkImage(imgPath.isNotEmpty ? imgPath : imgUrl3),
+                fit: BoxFit.cover),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Column(
